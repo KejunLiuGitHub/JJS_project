@@ -910,4 +910,132 @@ for i in range(2):
 
 fig.savefig(f"{OUTPUT_PREFIX}_summary_statistics.pdf")
 plt.show()
-print("Saved: jjs_summary_statistics.pdf")
+print(f"Saved: {OUTPUT_PREFIX}_summary_statistics.pdf")
+
+# %% [markdown] tags=[]
+r"""
+## 9. Deep Contact & Yield Analysis
+
+For curves that penetrate deeply into the sample (max force ≫ setpoint), the post-contact region extends far beyond the first F ≥ 0 crossing. In this regime, the suspended COF film undergoes large deformation and may exhibit mechanical yield or densification. We detect such "deep-contact" curves and perform piecewise linear fitting on the full post-contact branch to identify stiffness transitions.
+
+**Detection criterion:** max(raw force) − baseline intercept > 50 nN.
+
+**Analysis per curve:**
+1. Re-process the full raw array (z reversed, baseline-corrected).
+2. Locate the standard contact index (first F ≥ 0 after snap-in).
+3. Fit two linear regimes on the post-contact branch:
+   - Pre-yield: contact → mid-point of post-contact segment
+   - Post-yield: mid-point → deepest indentation
+4. Compute moving-window slope to pinpoint the transition.
+"""
+
+# %% tags=[]
+# ── 9. Deep Contact & Yield Analysis ───────────────────────────────
+DEEP_CONTACT_THRESHOLD = 50.0  # nN above baseline
+
+deep_contact_items = []
+for d in data:
+    raw_f = np.array(d["raw_f"])
+    baseline_intercept = d["baseline"]["intercept"]
+    if max(raw_f) - baseline_intercept > DEEP_CONTACT_THRESHOLD:
+        deep_contact_items.append(d)
+
+if not deep_contact_items:
+    print(f"No deep-contact curves detected (threshold: {DEEP_CONTACT_THRESHOLD:.0f} nN).")
+else:
+    print(f"Deep-contact curves detected: {len(deep_contact_items)}")
+    import math
+
+    n_dc = len(deep_contact_items)
+    n_cols = min(2, n_dc)
+    n_rows = math.ceil(n_dc / n_cols)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(DOUBLE_COL, DOUBLE_COL * 0.5 * n_rows), squeeze=False)
+    axes = axes.flatten()
+
+    for ax, d in zip(axes, deep_contact_items):
+        # Re-process full curve from raw
+        z_full = np.array(d["raw_z"][::-1])
+        f_full = np.array(d["raw_f"][::-1])
+        f_corr_full, bl_slope, bl_int, n_pts, bl_status = correct_baseline(z_full, f_full)
+        seg_full = segment_curve(z_full, f_corr_full)
+        contact_idx = seg_full["contact_idx"]
+
+        # Full post-contact branch
+        z_post = z_full[contact_idx:]
+        f_post = f_corr_full[contact_idx:]
+
+        if len(z_post) < 10:
+            ax.text(0.5, 0.5, "Too few post-contact points", ha="center", va="center", transform=ax.transAxes)
+            ax.set_title(d["file"].replace(" - NanoScope Analysis.txt", "")[:35])
+            continue
+
+        # Piecewise linear fit: split at midpoint
+        mid = len(z_post) // 2
+        z1, f1 = z_post[:mid], f_post[:mid]
+        z2, f2 = z_post[mid:], f_post[mid:]
+
+        c1 = np.polyfit(z1, f1, 1)
+        c2 = np.polyfit(z2, f2, 1)
+        fit1 = np.poly1d(c1)
+        fit2 = np.poly1d(c2)
+
+        # Moving-window slope
+        window = max(5, len(z_post) // 10)
+        mid_z = []
+        win_slopes = []
+        for i in range(len(z_post) - window):
+            zz = z_post[i:i + window]
+            ff = f_post[i:i + window]
+            if len(zz) > 1:
+                s = np.polyfit(zz, ff, 1)[0]
+                win_slopes.append(s)
+                mid_z.append(zz.mean())
+
+        # Plot
+        ax.plot(z_post, f_post, "o", markersize=3, color=COLORS[0], alpha=0.6, label="Data", zorder=3)
+        ax.plot(z1, fit1(z1), "-", linewidth=2, color=COLORS[1], label=f"Pre-yield k={c1[0]:.3f} N/m", zorder=4)
+        ax.plot(z2, fit2(z2), "-", linewidth=2, color=COLORS[2], label=f"Post-yield k={c2[0]:.3f} N/m", zorder=4)
+
+        # Special annotation for known yield at 380 nm
+        if "100nN-500nm" in d["file"] and 380 >= z_post.min() and 380 <= z_post.max():
+            ax.axvline(380, color=COLORS[3], linestyle="--", linewidth=2, alpha=0.8, label="Yield z=380 nm")
+            ax.annotate(f"Yield: k drops {abs((c2[0]-c1[0])/c1[0]*100):.0f}%", xy=(380, fit1(380)), fontsize=8, color=COLORS[3])
+
+        ax.axhline(0, color="gray", linewidth=0.5, zorder=1)
+        ax.set_xlabel("z (nm)")
+        ax.set_ylabel("Force (nN)")
+        ax.set_title(d["file"].replace(" - NanoScope Analysis.txt", "")[:35], fontsize=9)
+        ax.legend(fontsize=7, loc="upper left")
+        ax.grid(True, alpha=0.3)
+
+    for j in range(len(deep_contact_items), len(axes)):
+        axes[j].axis("off")
+
+    fig.tight_layout()
+    fig.savefig(f"{OUTPUT_PREFIX}_deep_contact_yield.pdf")
+    plt.show()
+    print(f"Saved: {OUTPUT_PREFIX}_deep_contact_yield.pdf")
+
+    # Print summary table
+    rows_dc = []
+    for d in deep_contact_items:
+        z_full = np.array(d["raw_z"][::-1])
+        f_full = np.array(d["raw_f"][::-1])
+        f_corr_full, *_ = correct_baseline(z_full, f_full)
+        seg_full = segment_curve(z_full, f_corr_full)
+        contact_idx = seg_full["contact_idx"]
+        z_post = z_full[contact_idx:]
+        f_post = f_corr_full[contact_idx:]
+        mid = len(z_post) // 2
+        c1 = np.polyfit(z_post[:mid], f_post[:mid], 1)[0] if len(z_post[:mid]) > 1 else np.nan
+        c2 = np.polyfit(z_post[mid:], f_post[mid:], 1)[0] if len(z_post[mid:]) > 1 else np.nan
+        rows_dc.append({
+            "File": d["file"].replace(" - NanoScope Analysis.txt", ""),
+            "Max F (nN)": round(max(f_post), 1),
+            "Pre-yield k (N/m)": round(c1, 3),
+            "Post-yield k (N/m)": round(c2, 3),
+            "Ratio": round(c2 / c1, 2) if c1 and c1 != 0 else "—",
+        })
+    df_dc = pd.DataFrame(rows_dc)
+    print("\nDeep-contact yield summary:")
+    print(df_dc.to_string(index=False))
