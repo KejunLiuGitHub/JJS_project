@@ -16,23 +16,69 @@ This notebook analyzes 11 force-distance curves acquired on a suspended ultrathi
 """
 
 # %%
-import json
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from pathlib import Path
 
-# ── Load data (auto-detect project root) ───────────────────────────
+# ── Auto-detect project root ───────────────────────────────────────
 cwd = Path.cwd()
-if (cwd / "results" / "jjs_transition_deep_analysis.json").exists():
+if (cwd / "20260409").exists() and (cwd / "scripts").exists():
     ROOT = cwd
-elif (cwd.parent / "results" / "jjs_transition_deep_analysis.json").exists():
+elif (cwd.parent / "20260409").exists() and (cwd.parent / "scripts").exists():
     ROOT = cwd.parent
 else:
-    raise FileNotFoundError("Cannot find results/jjs_transition_deep_analysis.json")
-JSON_PATH = ROOT / "results" / "jjs_transition_deep_analysis.json"
-with open(JSON_PATH, "r", encoding="utf-8") as f:
-    data = json.load(f)
+    raise FileNotFoundError("Cannot find project root with 20260409/ and scripts/")
+
+# ── Import cleaning module ─────────────────────────────────────────
+sys.path.insert(0, str(ROOT / "scripts"))
+from cleaning import load_raw, correct_baseline, segment_curve
+
+# ── Load raw data ──────────────────────────────────────────────────
+RAW_DIR = ROOT / "20260409"
+raw_files = sorted(RAW_DIR.glob("JJS*.txt"))
+raw_curves = [load_raw(f) for f in raw_files]
+print(f"Loaded {len(raw_curves)} raw curves from 20260409/")
+
+# Clean & validate (returns all curves with warnings noted)
+data = []
+for rc in raw_curves:
+    f_corr, slope, intercept, n_points, status = correct_baseline(rc["z"], rc["f"])
+    if f_corr is None:
+        continue
+    seg = segment_curve(rc["z"], f_corr)
+    vdW = {
+        "F_vdw_nonret": 2.9629629629629632,
+        "F_capillary_theory": 7.238229473870883,
+        "F_vdw_plus_cap": 10.201192436833846,
+    }
+    item = {
+        "file": rc["filename"],
+        "disp_nm": rc["meta"]["piezo_displacement"],
+        "setpoint": f"{rc['meta']['setpoint_force']}{rc['meta']['setpoint_unit']}",
+        "snap_f": seg["snap_f"],
+        "snap_z": seg["snap_z"],
+        "contact_z": seg["contact_z"],
+        "contact_f": seg["contact_f"],
+        "max_drop_slope": seg["max_drop_slope"],
+        "avg_drop_slope": seg["avg_drop_slope"],
+        "max_rise_slope": seg["max_rise_slope"],
+        "avg_rise_slope": seg["avg_rise_slope"],
+        "asymmetry_ratio": seg["asymmetry_ratio"],
+        "energy_dissipated": seg["energy_dissipated"],
+        "drop_z": seg["drop_z"],
+        "drop_f": seg["drop_f"],
+        "rise_z": seg["rise_z"],
+        "rise_f": seg["rise_f"],
+        "recovery": seg["recovery"],
+        "vdW_check": vdW,
+        "baseline": {"slope": slope, "intercept": intercept, "status": status, "n_points": n_points},
+        "raw_z": rc["z_raw"].tolist(),
+        "raw_f": rc["f_raw"].tolist(),
+    }
+    data.append(item)
+print(f"Cleaned data: {len(data)} curves ready for analysis.")
 
 # ── A4 academic figure sizes ───────────────────────────────────────
 # Single column: 8.6 cm; double column: 17.8 cm (1 inch = 2.54 cm)
@@ -79,6 +125,170 @@ def r2_score(y_true, y_pred):
     return 1 - ss_res / ss_tot
 
 print("Global configuration loaded. Data:", len(data), "curves.")
+
+# %% [markdown]
+r"""
+## A. Raw Data Overview
+
+The Bruker NanoScope Analysis exports force-distance curves as `.txt` files with the following characteristics:
+- **Encoding**: `latin-1` (Chinese headers cause `UnicodeDecodeError` with `utf-8`)
+- **Z direction**: Decreasing monotonically (e.g., 1000 → 0 nm), which is reversed for physical interpretation
+- **Force baseline**: Positive offset (~12–16 nN) due to optical-lever drift
+- **Points**: Exactly 512 per curve (PeakForce QNM standard)
+
+Below we plot the **raw, uncorrected** force vs. displacement for three representative curves to illustrate these artifacts before any processing is applied.
+"""
+
+# %%
+# Select 3 representative curves by displacement group
+rep_disp = {454: None, 1000: None, 1500: None}
+for d in data:
+    disp = int(d["disp_nm"]) if d["disp_nm"] else 0
+    if disp in rep_disp and rep_disp[disp] is None:
+        rep_disp[disp] = d
+rep_items = [v for v in rep_disp.values() if v is not None]
+
+fig, axes = plt.subplots(1, len(rep_items), figsize=(DOUBLE_COL, DOUBLE_COL * 0.35), sharey=True)
+if len(rep_items) == 1:
+    axes = [axes]
+
+for ax, item in zip(axes, rep_items):
+    z_raw = np.array(item["raw_z"])
+    f_raw = np.array(item["raw_f"])
+    ax.plot(z_raw, f_raw, "o-", markersize=3, color=COLORS[0], linewidth=1.0, zorder=3)
+    ax.axhline(0, color="gray", linewidth=0.5, linestyle="-", zorder=1)
+    ax.set_xlabel("Raw Z (decreasing)")
+    ax.set_ylabel("Raw Force (nN)")
+    short_name = item["file"].replace("JJS-50nm-", "").replace(" - NanoScope Analysis.txt", "")
+    ax.set_title(short_name, fontsize=9)
+    ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
+    ax.invert_xaxis()  # Show decreasing Z as in original file
+
+fig.tight_layout()
+fig.savefig("jjs_raw_data_overview.pdf")
+plt.show()
+print("Saved: jjs_raw_data_overview.pdf")
+
+# %% [markdown]
+r"""
+## B. Baseline Correction
+
+The far-field region ($Z \in [0, 100]$ nm after reversal) contains no tip–sample interaction for a 10 nm film on a 20 μm pore. A linear fit $F_{bl}(Z) = a \cdot Z + b$ captures thermal drift and lever offset:
+
+- **≥ 5 points in [0, 100] nm**: Linear fit
+- **3–4 points**: Constant offset (mean subtraction)
+- **< 3 points**: Correction fails → curve flagged
+
+The corrected force is $F_{corr} = F_{raw} - F_{bl}(Z)$.
+"""
+
+# %%
+# Demonstrate baseline correction on 2 representative curves
+fig, axes = plt.subplots(2, 2, figsize=(DOUBLE_COL, DOUBLE_COL * 0.5))
+
+demo_indices = [0, 6]
+for row, idx in enumerate(demo_indices):
+    item = data[idx]
+    z_raw = np.array(item["raw_z"])
+    f_raw = np.array(item["raw_f"])
+    z = z_raw[::-1].copy()
+    f = f_raw[::-1].copy()
+    f_corr, slope, intercept, n_pts, status = correct_baseline(z, f)
+
+    ax = axes[row, 0]
+    ax.plot(z, f, "o-", markersize=2, color=COLORS[0], linewidth=0.8, label="Raw", zorder=3)
+    baseline = slope * z + intercept
+    ax.plot(z, baseline, "--", color=COLORS[1], linewidth=1.2, label="Baseline fit", zorder=2)
+    ax.axhline(0, color="gray", linewidth=0.5, zorder=1)
+    ax.set_ylabel("Force (nN)")
+    short = item["file"].replace("JJS-50nm-", "").replace(" - NanoScope Analysis.txt", "")[:25]
+    ax.set_title(f"{short} — Before correction", fontsize=8)
+    ax.legend(fontsize=7)
+    ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
+
+    ax = axes[row, 1]
+    ax.plot(z, f_corr, "o-", markersize=2, color=COLORS[2], linewidth=0.8, zorder=3)
+    ax.axhline(0, color="gray", linewidth=0.5, zorder=1)
+    ax.set_ylabel("Force (nN)")
+    ax.set_title(f"Slope={slope:.4f}, Intercept={intercept:.2f} nN, N={n_pts}", fontsize=8)
+    ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
+
+for ax in axes[:, 0]:
+    ax.set_xlabel("Z (nm, reversed)")
+for ax in axes[:, 1]:
+    ax.set_xlabel("Z (nm, reversed)")
+
+fig.tight_layout()
+fig.savefig("jjs_baseline_correction_demo.pdf")
+plt.show()
+print("Saved: jjs_baseline_correction_demo.pdf")
+
+# %% [markdown]
+r"""
+## C. Data Cleaning & Validation
+
+The full cleaning pipeline proceeds as follows:
+1. **Reverse** Z direction (Bruker exports decreasing; we need increasing for physical interpretation)
+2. **Correct baseline** using far-field linear fit ($Z \in [0, 100]$ nm)
+3. **Detect snap-in**: $\mathrm{argmin}(F_{corr})$ — maximum attractive force
+4. **Detect contact**: First post-snap-in point where $F_{corr} \geq 0$
+5. **Segment** into drop (approach) and rise (retraction) regions
+6. **Validate**: Curves with warnings are flagged but retained for transparency
+
+The table below summarizes the validation results for all curves.
+"""
+
+# %%
+# Validation summary table
+rows = []
+for item in data:
+    rows.append({
+        "File": item["file"].replace(" - NanoScope Analysis.txt", ""),
+        "Disp (nm)": int(item["disp_nm"]) if item["disp_nm"] else "—",
+        "Snap (nN)": round(item["snap_f"], 1),
+        "Contact Z (nm)": round(item["contact_z"], 1),
+        "Drop pts": len(item["drop_z"]),
+        "Rise pts": len(item["rise_z"]),
+        "Baseline": item["baseline"]["status"],
+    })
+
+import pandas as pd
+df_val = pd.DataFrame(rows)
+print(df_val.to_string(index=False))
+
+# Plot segmentation on one representative curve
+item = data[0]
+z = np.array(item["raw_z"][::-1])
+f = np.array(item["raw_f"][::-1])
+f_corr, *_ = correct_baseline(z, f)
+seg = segment_curve(z, f_corr)
+
+fig, ax = plt.subplots(figsize=(SINGLE_COL, SINGLE_COL * 0.75))
+ax.plot(z, f_corr, "o-", markersize=2, color=COLORS[0], linewidth=0.8, zorder=3, label="Corrected")
+
+if len(seg["drop_z"]) > 0:
+    ax.fill_between(seg["drop_z"], min(f_corr) * 1.1, max(f_corr) * 1.1,
+                    alpha=0.15, color=COLORS[0], label="Drop region")
+if len(seg["rise_z"]) > 0:
+    ax.fill_between(seg["rise_z"], min(f_corr) * 1.1, max(f_corr) * 1.1,
+                    alpha=0.15, color=COLORS[2], label="Rise region")
+
+ax.scatter([seg["snap_z"]], [seg["snap_f"]], c=COLORS[1], s=100, marker="*",
+           zorder=5, edgecolors="white", linewidth=0.5, label="Snap-in")
+if seg["contact_z"] is not None:
+    ax.scatter([seg["contact_z"]], [seg["contact_f"]], c=COLORS[3], s=80, marker="^",
+               zorder=5, edgecolors="white", linewidth=0.5, label="Contact")
+
+ax.axhline(0, color="gray", linewidth=0.5, zorder=1)
+ax.set_xlabel("Z (nm)")
+ax.set_ylabel("Force (nN)")
+ax.set_title("Segmentation Example: " + item["file"][:35])
+ax.legend(loc="lower right", fontsize=7)
+ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
+
+fig.savefig("jjs_segmentation_validation.pdf")
+plt.show()
+print("Saved: jjs_segmentation_validation.pdf")
 
 # %% [markdown]
 r"""
@@ -167,7 +377,7 @@ F_cap = 4 * np.pi * R_m * gamma_N_m * 1e9  # nN
 F_cp = (np.pi**3 * hbar_c_J_m * R_m / (360 * d0_m**3)) * eta * 1e9  # nN
 
 # Electrostatic: calculate V_CPD needed to match mean measured force
-F_measured_all = [abs(d["snap_f_nN"]) for d in data]
+F_measured_all = [abs(d["snap_f"]) for d in data]
 F_mean = np.mean(F_measured_all)
 F_min = np.min(F_measured_all)
 F_max = np.max(F_measured_all)
@@ -237,8 +447,8 @@ for d in data:
         "File": d["file"].replace(" - NanoScope Analysis.txt", ""),
         "Disp (nm)": d["disp_nm"],
         "Setpoint": d["setpoint"],
-        "Snap (nN)": round(d["snap_f_nN"], 1),
-        "Depth (nm)": round(d["contact_z_nm"] - d["snap_z_nm"], 1),
+        "Snap (nN)": round(d["snap_f"], 1),
+        "Depth (nm)": round(d["contact_z"] - d["snap_z"], 1),
         "Drop (N/m)": round(d["max_drop_slope"], 1),
         "Rise (N/m)": round(d["max_rise_slope"], 1),
     })
@@ -295,7 +505,7 @@ from collections import defaultdict
 
 disp_groups = defaultdict(list)
 for d in data:
-    disp_groups[d["disp_nm"]].append(abs(d["snap_f_nN"]))
+    disp_groups[d["disp_nm"]].append(abs(d["snap_f"]))
 
 disp_sorted = sorted(disp_groups.keys())
 disp_mean = [np.mean(disp_groups[d]) for d in disp_sorted]
@@ -408,7 +618,7 @@ No new formulas are required here; the energy is obtained by numerical integrati
 """
 
 # %%
-energies = [d["energy_dissipated_nN_nm"] for d in data]
+energies = [d["energy_dissipated"] for d in data]
 disps = [d["disp_nm"] for d in data]
 
 fig, ax = plt.subplots(figsize=(SINGLE_COL, SINGLE_COL * 0.75))
@@ -514,15 +724,15 @@ summary = {
     ],
     "Value": [
         str(len(data)),
-        f"{np.mean([abs(d['snap_f_nN']) for d in data]):.1f} nN",
-        f"{min([abs(d['snap_f_nN']) for d in data]):.1f}–{max([abs(d['snap_f_nN']) for d in data]):.1f} nN",
-        f"{data[0]['vdW_check']['F_vdw_nonret_nN']:.2f} nN",
-        f"{data[0]['vdW_check']['F_capillary_theory_nN']:.2f} nN",
-        f"{data[0]['vdW_check']['F_vdw_plus_cap_nN']:.2f} nN",
-        f"{np.mean([abs(d['snap_f_nN']) for d in data]) / data[0]['vdW_check']['F_vdw_plus_cap_nN']:.1f}×",
+        f"{np.mean([abs(d['snap_f']) for d in data]):.1f} nN",
+        f"{min([abs(d['snap_f']) for d in data]):.1f}–{max([abs(d['snap_f']) for d in data]):.1f} nN",
+        f"{data[0]['vdW_check']['F_vdw_nonret']:.2f} nN",
+        f"{data[0]['vdW_check']['F_capillary_theory']:.2f} nN",
+        f"{data[0]['vdW_check']['F_vdw_plus_cap']:.2f} nN",
+        f"{np.mean([abs(d['snap_f']) for d in data]) / data[0]['vdW_check']['F_vdw_plus_cap']:.1f}×",
         f"{np.mean([d['asymmetry_ratio'] for d in data]):.3f}",
         f"{np.mean([d['recovery']['plateau_fraction'] for d in data]):.2f}",
-        f"{np.mean([d['energy_dissipated_nN_nm'] for d in data]):.1f} nN·nm",
+        f"{np.mean([d['energy_dissipated'] for d in data]):.1f} nN·nm",
     ],
 }
 
