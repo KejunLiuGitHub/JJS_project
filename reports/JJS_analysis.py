@@ -1,3 +1,18 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.1
+#   kernelspec:
+#     display_name: base
+#     language: python
+#     name: python3
+# ---
+
 # %% [markdown]
 r"""
 # AFM Force-Distance Analysis: JJS Suspended COF Film
@@ -18,6 +33,7 @@ This notebook analyzes 11 force-distance curves acquired on a suspended ultrathi
 # %%
 import sys
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from pathlib import Path
@@ -140,29 +156,32 @@ Below we plot the **raw, uncorrected** force vs. displacement for three represen
 """
 
 # %%
-# Select 3 representative curves by displacement group
-rep_disp = {454: None, 1000: None, 1500: None}
-for d in data:
-    disp = int(d["disp_nm"]) if d["disp_nm"] else 0
-    if disp in rep_disp and rep_disp[disp] is None:
-        rep_disp[disp] = d
-rep_items = [v for v in rep_disp.values() if v is not None]
+# Plot all 11 raw curves overlaid, colored by displacement group
+disp_colors = {454: COLORS[0], 500: COLORS[1], 1000: COLORS[2], 1500: COLORS[3]}
 
-fig, axes = plt.subplots(1, len(rep_items), figsize=(DOUBLE_COL, DOUBLE_COL * 0.35), sharey=True)
-if len(rep_items) == 1:
-    axes = [axes]
-
-for ax, item in zip(axes, rep_items):
+fig, ax = plt.subplots(figsize=(DOUBLE_COL, DOUBLE_COL * 0.4))
+for item in data:
     z_raw = np.array(item["raw_z"])
     f_raw = np.array(item["raw_f"])
-    ax.plot(z_raw, f_raw, "o-", markersize=3, color=COLORS[0], linewidth=1.0, zorder=3)
-    ax.axhline(0, color="gray", linewidth=0.5, linestyle="-", zorder=1)
-    ax.set_xlabel("Raw Z (decreasing)")
-    ax.set_ylabel("Raw Force (nN)")
-    short_name = item["file"].replace("JJS-50nm-", "").replace(" - NanoScope Analysis.txt", "")
-    ax.set_title(short_name, fontsize=9)
-    ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
-    ax.invert_xaxis()  # Show decreasing Z as in original file
+    disp = int(item["disp_nm"]) if item["disp_nm"] else 0
+    color = disp_colors.get(disp, COLORS[4])
+    ax.plot(z_raw, f_raw, "-", linewidth=0.6, alpha=0.7, color=color, zorder=2)
+
+ax.axhline(0, color="gray", linewidth=0.5, linestyle="-", zorder=1)
+ax.set_xlabel("Raw Z (decreasing, nm)")
+ax.set_ylabel("Raw Force (nN)")
+ax.set_title("All 11 Raw Force-Distance Curves (Uncorrected)")
+ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
+ax.invert_xaxis()
+
+from matplotlib.patches import Patch
+legend_elements = [
+    Patch(facecolor=COLORS[0], edgecolor="black", label="454 nm (1)"),
+    Patch(facecolor=COLORS[1], edgecolor="black", label="500 nm (2)"),
+    Patch(facecolor=COLORS[2], edgecolor="black", label="1000 nm (4)"),
+    Patch(facecolor=COLORS[3], edgecolor="black", label="1500 nm (4)"),
+]
+ax.legend(handles=legend_elements, loc="upper right", fontsize=8)
 
 fig.tight_layout()
 fig.savefig("jjs_raw_data_overview.pdf")
@@ -183,16 +202,31 @@ The corrected force is $F_{corr} = F_{raw} - F_{bl}(Z)$.
 """
 
 # %%
-# Demonstrate baseline correction on 2 representative curves
-fig, axes = plt.subplots(2, 2, figsize=(DOUBLE_COL, DOUBLE_COL * 0.5))
+# Baseline correction: summary table for all curves + 2 detailed demos
+rows_bl = []
+for item in data:
+    z = np.array(item["raw_z"][::-1])
+    f = np.array(item["raw_f"][::-1])
+    f_corr, slope, intercept, n_pts, status = correct_baseline(z, f)
+    rows_bl.append({
+        "File": item["file"].replace(" - NanoScope Analysis.txt", ""),
+        "Slope (nN/nm)": round(slope, 4),
+        "Intercept (nN)": round(intercept, 2),
+        "N points": n_pts,
+        "Status": status,
+    })
 
+df_bl = pd.DataFrame(rows_bl)
+print("Baseline correction summary for all curves:")
+print(df_bl.to_string(index=False))
+
+# Detailed demo on 2 representative curves
+fig, axes = plt.subplots(2, 2, figsize=(DOUBLE_COL, DOUBLE_COL * 0.5))
 demo_indices = [0, 6]
 for row, idx in enumerate(demo_indices):
     item = data[idx]
-    z_raw = np.array(item["raw_z"])
-    f_raw = np.array(item["raw_f"])
-    z = z_raw[::-1].copy()
-    f = f_raw[::-1].copy()
+    z = np.array(item["raw_z"][::-1])
+    f = np.array(item["raw_f"][::-1])
     f_corr, slope, intercept, n_pts, status = correct_baseline(z, f)
 
     ax = axes[row, 0]
@@ -239,7 +273,7 @@ The table below summarizes the validation results for all curves.
 """
 
 # %%
-# Validation summary table
+# Validation summary table for all curves
 rows = []
 for item in data:
     rows.append({
@@ -252,40 +286,45 @@ for item in data:
         "Baseline": item["baseline"]["status"],
     })
 
-import pandas as pd
 df_val = pd.DataFrame(rows)
 print(df_val.to_string(index=False))
 
-# Plot segmentation on one representative curve
-item = data[0]
-z = np.array(item["raw_z"][::-1])
-f = np.array(item["raw_f"][::-1])
-f_corr, *_ = correct_baseline(z, f)
-seg = segment_curve(z, f_corr)
+# Plot segmentation for all curves as small multiples
+n_curves = len(data)
+n_cols = 4
+n_rows = int(np.ceil(n_curves / n_cols))
+fig, axes = plt.subplots(n_rows, n_cols, figsize=(DOUBLE_COL, DOUBLE_COL * 0.35 * n_rows / 2))
+axes = axes.flatten() if n_curves > 1 else [axes]
 
-fig, ax = plt.subplots(figsize=(SINGLE_COL, SINGLE_COL * 0.75))
-ax.plot(z, f_corr, "o-", markersize=2, color=COLORS[0], linewidth=0.8, zorder=3, label="Corrected")
+for ax, item in zip(axes, data):
+    z = np.array(item["raw_z"][::-1])
+    f = np.array(item["raw_f"][::-1])
+    f_corr, *_ = correct_baseline(z, f)
+    seg = segment_curve(z, f_corr)
 
-if len(seg["drop_z"]) > 0:
-    ax.fill_between(seg["drop_z"], min(f_corr) * 1.1, max(f_corr) * 1.1,
-                    alpha=0.15, color=COLORS[0], label="Drop region")
-if len(seg["rise_z"]) > 0:
-    ax.fill_between(seg["rise_z"], min(f_corr) * 1.1, max(f_corr) * 1.1,
-                    alpha=0.15, color=COLORS[2], label="Rise region")
+    ax.plot(z, f_corr, "o-", markersize=1.5, color=COLORS[0], linewidth=0.6, zorder=3)
+    if len(seg["drop_z"]) > 0:
+        ax.fill_between(seg["drop_z"], min(f_corr) * 1.1, max(f_corr) * 1.1,
+                        alpha=0.12, color=COLORS[0])
+    if len(seg["rise_z"]) > 0:
+        ax.fill_between(seg["rise_z"], min(f_corr) * 1.1, max(f_corr) * 1.1,
+                        alpha=0.12, color=COLORS[2])
+    ax.scatter([seg["snap_z"]], [seg["snap_f"]], c=COLORS[1], s=60, marker="*",
+               zorder=5, edgecolors="white", linewidth=0.3)
+    if seg["contact_z"] is not None:
+        ax.scatter([seg["contact_z"]], [seg["contact_f"]], c=COLORS[3], s=40, marker="^",
+                   zorder=5, edgecolors="white", linewidth=0.3)
+    ax.axhline(0, color="gray", linewidth=0.4, zorder=1)
+    short = item["file"].replace("JJS-50nm-", "").replace(" - NanoScope Analysis.txt", "")[:20]
+    ax.set_title(short, fontsize=7)
+    ax.grid(True, alpha=0.2, linestyle="--", linewidth=0.4, zorder=0)
+    ax.tick_params(axis="both", labelsize=6)
 
-ax.scatter([seg["snap_z"]], [seg["snap_f"]], c=COLORS[1], s=100, marker="*",
-           zorder=5, edgecolors="white", linewidth=0.5, label="Snap-in")
-if seg["contact_z"] is not None:
-    ax.scatter([seg["contact_z"]], [seg["contact_f"]], c=COLORS[3], s=80, marker="^",
-               zorder=5, edgecolors="white", linewidth=0.5, label="Contact")
+# Hide unused subplots
+for ax in axes[n_curves:]:
+    ax.axis("off")
 
-ax.axhline(0, color="gray", linewidth=0.5, zorder=1)
-ax.set_xlabel("Z (nm)")
-ax.set_ylabel("Force (nN)")
-ax.set_title("Segmentation Example: " + item["file"][:35])
-ax.legend(loc="lower right", fontsize=7)
-ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
-
+fig.tight_layout()
 fig.savefig("jjs_segmentation_validation.pdf")
 plt.show()
 print("Saved: jjs_segmentation_validation.pdf")
@@ -423,7 +462,7 @@ for bar, val in zip(bars, values):
 ax.set_ylabel("Force (nN)")
 ax.set_title("Theory vs. Measured Snap-in Force")
 ax.set_yscale("log")
-ax.set_ylim(1e-2, 300)
+ax.set_ylim(1e-2, 5000)
 ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
 ax.tick_params(axis="x", rotation=15)
 
@@ -546,6 +585,7 @@ ax.plot(
 
 ax.set_xlabel("Piezo Displacement (nm)")
 ax.set_ylabel(r"$|F_{snap}|$ (nN)")
+ax.set_ylim(0, 250)
 ax.set_title("Snap-in Force vs. Displacement")
 ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5, zorder=0)
 ax.legend(loc="upper right", fontsize=8)
