@@ -203,28 +203,28 @@ def segment_curve(z, f_corr):
         max_drop_slope = float(np.min(drop_slopes))  # 最负 = 最大下降速率
         avg_drop_slope = float(np.mean(drop_slopes))
     else:
-        max_drop_slope = None
-        avg_drop_slope = None
+        max_drop_slope = 0.0
+        avg_drop_slope = 0.0
 
     if len(rise_z) >= 2:
         rise_slopes = np.diff(rise_f) / np.diff(rise_z)
         max_rise_slope = float(np.max(rise_slopes))
         avg_rise_slope = float(np.mean(rise_slopes))
     else:
-        max_rise_slope = None
-        avg_rise_slope = None
+        max_rise_slope = 0.0
+        avg_rise_slope = 0.0
 
     # 不对称性
-    if max_drop_slope is not None and max_drop_slope != 0 and max_rise_slope is not None:
+    if abs(max_drop_slope) > 1e-12:
         asymmetry_ratio = abs(max_rise_slope / max_drop_slope)
     else:
-        asymmetry_ratio = None
+        asymmetry_ratio = 0.0
 
     # 能量耗散（transition zone 面积，approach 从 drop_start 到 snap）
     if len(drop_z) >= 2:
         energy_dissipated = float(np.trapezoid(drop_f, drop_z))
     else:
-        energy_dissipated = None
+        energy_dissipated = 0.0
 
     # Recovery 分析（rise 段）
     if len(rise_z) >= 2:

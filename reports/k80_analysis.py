@@ -62,15 +62,15 @@ ENVIRONMENT = "Air ambient, RH > 60 %"
 
 # %% tags=["injected-parameters"]
 # Parameters
-DATASET_DIR = "20260409"
-SAMPLE_NAME = "JJS"
-FILM_THICKNESS_NM = 10
+DATASET_DIR = "20260416\u539f\u59cb\u6570\u636e"
+SAMPLE_NAME = "k80"
+FILM_THICKNESS_NM = 50
 PORE_DIAMETER_UM = 20
 PROBE_RADIUS_NM = 8.0
 CANTILEVER_STIFFNESS_N_M = 5.0
-FILE_PATTERN = "JJS*.txt"
-OUTPUT_PREFIX = "jjs"
-ENVIRONMENT = "Air ambient, RH > 60 %"
+FILE_PATTERN = "k80*.txt"
+OUTPUT_PREFIX = "k80"
+ENVIRONMENT = "Air ambient"
 
 
 # %% tags=[]
