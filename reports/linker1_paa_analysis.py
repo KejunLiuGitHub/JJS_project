@@ -62,15 +62,15 @@ ENVIRONMENT = "Air ambient, RH > 60 %"
 
 # %% tags=["injected-parameters"]
 # Parameters
-DATASET_DIR = "20260409"
-SAMPLE_NAME = "JJS"
+DATASET_DIR = "20260415\u539f\u59cb\u6570\u636e"
+SAMPLE_NAME = "linker1-paa"
 FILM_THICKNESS_NM = 10
 PORE_DIAMETER_UM = 20
 PROBE_RADIUS_NM = 8.0
 CANTILEVER_STIFFNESS_N_M = 5.0
-FILE_PATTERN = "JJS*.txt"
-OUTPUT_PREFIX = "jjs"
-ENVIRONMENT = "Air ambient, RH > 60 %"
+FILE_PATTERN = "linker1-paa-*.txt"
+OUTPUT_PREFIX = "linker1_paa"
+ENVIRONMENT = "Air ambient"
 
 
 # %% tags=[]

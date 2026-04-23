@@ -27,7 +27,7 @@ except ImportError:
 from dataset_registry import get_config, list_datasets
 
 
-def run(dataset_key, output_prefix=None, dry_run=False):
+def run(dataset_key, output_prefix=None, dry_run=False, pattern_override=None, sample_name_override=None):
     """执行指定数据集的分析。"""
     cfg = get_config(dataset_key)
 
@@ -42,12 +42,12 @@ def run(dataset_key, output_prefix=None, dry_run=False):
 
     parameters = {
         "DATASET_DIR": dataset_key,
-        "SAMPLE_NAME": cfg["sample_name"],
+        "SAMPLE_NAME": sample_name_override if sample_name_override else cfg["sample_name"],
         "FILM_THICKNESS_NM": cfg["film_thickness_nm"],
         "PORE_DIAMETER_UM": cfg["pore_diameter_um"],
         "PROBE_RADIUS_NM": cfg["probe_radius_nm"],
         "CANTILEVER_STIFFNESS_N_M": cfg["cantilever_stiffness_N_m"],
-        "FILE_PATTERN": cfg["pattern"],
+        "FILE_PATTERN": pattern_override if pattern_override else cfg["pattern"],
         "OUTPUT_PREFIX": output_prefix,
         "ENVIRONMENT": cfg["environment"],
     }
@@ -118,6 +118,16 @@ def main():
         help="列出所有已注册的数据集",
     )
     parser.add_argument(
+        "--pattern",
+        default=None,
+        help="覆盖文件匹配模式（如 'linker1-nls-*.txt'）",
+    )
+    parser.add_argument(
+        "--sample-name",
+        default=None,
+        help="覆盖样本名称",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="只打印参数，不执行",
@@ -129,7 +139,7 @@ def main():
         list_datasets()
         return
 
-    run(args.dataset, args.output_prefix, args.dry_run)
+    run(args.dataset, args.output_prefix, args.dry_run, args.pattern, args.sample_name)
 
 
 if __name__ == "__main__":

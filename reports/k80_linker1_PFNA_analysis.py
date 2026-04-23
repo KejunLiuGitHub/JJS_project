@@ -62,15 +62,15 @@ ENVIRONMENT = "Air ambient, RH > 60 %"
 
 # %% tags=["injected-parameters"]
 # Parameters
-DATASET_DIR = "20260409"
-SAMPLE_NAME = "JJS"
-FILM_THICKNESS_NM = 10
+DATASET_DIR = "20260416\u539f\u59cb\u6570\u636e"
+SAMPLE_NAME = "k80-linker1-PFNA"
+FILM_THICKNESS_NM = 50
 PORE_DIAMETER_UM = 20
 PROBE_RADIUS_NM = 8.0
 CANTILEVER_STIFFNESS_N_M = 5.0
-FILE_PATTERN = "JJS*.txt"
-OUTPUT_PREFIX = "jjs"
-ENVIRONMENT = "Air ambient, RH > 60 %"
+FILE_PATTERN = "k80-linker1-PFNA-*.txt"
+OUTPUT_PREFIX = "k80_linker1_PFNA"
+ENVIRONMENT = "Air ambient"
 
 
 # %% tags=[]
@@ -287,7 +287,7 @@ print(df_bl.to_string(index=False))
 
 # Detailed demo on 2 representative curves
 fig, axes = plt.subplots(2, 2, figsize=(DOUBLE_COL, DOUBLE_COL * 0.5))
-demo_indices = [0, min(6, len(data)-1)] if len(data) >= 2 else [0]
+demo_indices = [0, 6]
 for row, idx in enumerate(demo_indices):
     item = data[idx]
     z = np.array(item["raw_z"][::-1])
