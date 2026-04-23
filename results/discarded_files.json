@@ -1,0 +1,44 @@
+[
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-12110nm.spm - NanoScope Analysis.txt",
+    "reason": "discarded: far-end points < 3",
+    "intercept": 0.0,
+    "far_end_points": 2
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-PFNA-50nm-12410nm-10uN - NanoScope Analysis.txt",
+    "reason": "discarded: far-end points < 3",
+    "intercept": 0.0,
+    "far_end_points": 2
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-SDBS-50nm-12410nm-10uN - NanoScope Analysis.txt",
+    "reason": "discarded: far-end points < 3",
+    "intercept": 0.0,
+    "far_end_points": 2
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-paa-50nm-12410nm-10uN - NanoScope Analysis.txt",
+    "reason": "discarded: far-end points < 3",
+    "intercept": 0.0,
+    "far_end_points": 2
+  },
+  {
+    "file": "20260416原始数据\\k80-linker2-paa-50nm-100nm-125.5nN - NanoScope Analysis.txt",
+    "reason": "discarded: intercept -269.1 > 200",
+    "intercept": -269.13806071337547,
+    "far_end_points": 256
+  },
+  {
+    "file": "20260416原始数据\\k80-linker2-paa-50nm-100nm-125.5nN-2 - NanoScope Analysis.txt",
+    "reason": "discarded: intercept -256.6 > 200",
+    "intercept": -256.6044262554838,
+    "far_end_points": 256
+  },
+  {
+    "file": "20260416原始数据\\k80-linker2-paa-50nm-200nm-125.5nN - NanoScope Analysis.txt",
+    "reason": "discarded: intercept -229.4 > 200",
+    "intercept": -229.35497063308134,
+    "far_end_points": 129
+  }
+]

@@ -1,0 +1,11 @@
+parameter,value,unit
+Probe radius R,8,nm
+Cantilever stiffness k_c,5.0,N/m
+Water surface tension γ,72,mN/m
+Hamaker constant A,4×10⁻¹⁹,J
+Cutoff distance d₀,0.3,nm
+Film thickness t,10,nm
+Pore diameter,20,μm
+Relative humidity,>60,%
+PeakForce frequency,~2,kHz
+Tip velocity (est.),~0.1–1,m/s

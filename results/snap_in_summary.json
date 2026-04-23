@@ -1,0 +1,498 @@
+[
+  {
+    "file": "20260409\\JJS-50nm-1000nm-10nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 1000.0,
+    "setpoint": "10.0nN",
+    "snap_in_nN": -115.92072458753096,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-1000nm-50nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 1000.0,
+    "setpoint": "50.0nN",
+    "snap_in_nN": -114.23362995271142,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-1000nm-8nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 1000.0,
+    "setpoint": "8.0nN",
+    "snap_in_nN": -121.76717506565436,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-1000nm-8nN- - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 1000.0,
+    "setpoint": "8.0nN",
+    "snap_in_nN": -114.75276704237905,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-1500nm-10nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 1500.0,
+    "setpoint": "10.0nN",
+    "snap_in_nN": -99.04883477083891,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-1500nm-8nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 1500.0,
+    "setpoint": "8.0nN",
+    "snap_in_nN": -102.14607002242651,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-1500nm-9nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 1500.0,
+    "setpoint": "9.0nN",
+    "snap_in_nN": -104.44291364314633,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-454nm-8.862nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 454.0,
+    "setpoint": "8.862nN",
+    "snap_in_nN": -150.60501432370987,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-500nm-10nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 500.0,
+    "setpoint": "10.0nN",
+    "snap_in_nN": -127.15632438192699,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-500nm-8.862nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 500.0,
+    "setpoint": "8.862nN",
+    "snap_in_nN": -143.24334797573266,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260409\\JJS-50nm-500nm-9nN - NanoScope Analysis.txt",
+    "folder": "20260409",
+    "displacement": 500.0,
+    "setpoint": "9.0nN",
+    "snap_in_nN": -134.7517755370456,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-10000nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 10000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -2.2958196779226334,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1000nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -7.839030724902788,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1000nm-3.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -5.224886630199059,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1000nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -6.131904258011875,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1500nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -6.720704985881305,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1500nm-3.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -6.314847498371542,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -4.116487959468998,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1800nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1800.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -4.492454662638217,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1800nm-3.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1800.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -6.565504007256109,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1800nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1800.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -7.396724561085907,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-2800nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 2800.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -5.003578961676292,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-300nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 300.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -8.42694159835014,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-300nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 300.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -9.342575872993901,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-4000nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 4000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -4.003596875694273,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-5000nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 5000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -1.7643552413576202,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-500nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -10.472444701960548,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-500nm-3.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -10.16224444924207,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -6.736542634698154,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-nls-1000nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -6.1160803042169825,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-nls-1000nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -3.9583687461561574,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-nls-1500nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -6.123887610306014,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-nls-1500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -7.556165160138892,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-nls-500nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -5.771493563757794,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-nls-500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -7.6028169097826,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-paa-1000nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -11.170660849575508,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-paa-1000nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -11.575555264336423,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-paa-100nN-500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -19.132475245434037,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-paa-500nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -13.569651102147485,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker1-paa-500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -13.586272125144927,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.1000nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -17.717345707884874,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.1500nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -8.554796766652842,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.2000nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 2000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -11.225995341448296,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.2000nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 2000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -10.485679540961335,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.2500nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 2500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -8.73242473012849,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.2500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 2500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -7.569786171126648,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.300nm.-2spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 300.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -15.808660958931043,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.300nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 300.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -16.454230505503347,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-.500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -22.559418897731575,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-1000nm-2.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1000.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -18.25602752555703,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-1500nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 1500.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -121.35464082133373,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260415原始数据\\linker2-paa-150nm.spm - NanoScope Analysis.txt",
+    "folder": "20260415原始数据",
+    "displacement": 150.0,
+    "setpoint": "100.0nN",
+    "snap_in_nN": -5.912659714550102,
+    "probe": "RTESPA-150"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-PFNA-50nm-7000nm-10uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 7000.0,
+    "setpoint": "10.0uN",
+    "snap_in_nN": -1.6482342416996867,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-PFNA-50nm-8000nm-10uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 8000.0,
+    "setpoint": "10.0uN",
+    "snap_in_nN": -2.01502497825748,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-SDBS-50nm-10000nm-10uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 10000.0,
+    "setpoint": "10.0uN",
+    "snap_in_nN": -1.6929486315480657,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-SDBS-50nm-4000nm-10uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 4000.0,
+    "setpoint": "10.0uN",
+    "snap_in_nN": -23.55979286269634,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-SDBS-50nm-7000nm-10uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 7000.0,
+    "setpoint": "10.0uN",
+    "snap_in_nN": -1.0994967746774496,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-SDBS-50nm-8000nm-10uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 8000.0,
+    "setpoint": "10.0uN",
+    "snap_in_nN": -1.600572617051354,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-paa-50nm-5000nm-3uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 5000.0,
+    "setpoint": "3.0uN",
+    "snap_in_nN": -1.0171799165791289,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-paa-50nm-6000nm-10uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 6000.0,
+    "setpoint": "10.0uN",
+    "snap_in_nN": -1.0959892946465501,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker1-paa-50nm-9000nm-10uN - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 9000.0,
+    "setpoint": "10.0uN",
+    "snap_in_nN": -3.4780774521344884,
+    "probe": "DDESP-V2"
+  },
+  {
+    "file": "20260416原始数据\\k80-linker2-paa-50nm-200nm-125.5nN-2 - NanoScope Analysis.txt",
+    "folder": "20260416原始数据",
+    "displacement": 200.0,
+    "setpoint": "125.5nN",
+    "snap_in_nN": -5.5400814058496906,
+    "probe": "DDESP-V2"
+  }
+]
