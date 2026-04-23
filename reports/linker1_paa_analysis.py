@@ -1039,3 +1039,138 @@ else:
     df_dc = pd.DataFrame(rows_dc)
     print("\nDeep-contact yield summary:")
     print(df_dc.to_string(index=False))
+
+# %% [markdown] tags=[]
+r"""
+## 10. Mechanical Property Estimation
+
+For deep-contact curves, we apply Hertz contact mechanics to estimate the apparent elastic modulus, yield stress, and hardness. Because the COF film (t ≈ 10 nm) is much thinner than the contact radius at yield (a ≈ 32 nm), the measured modulus is dominated by the copper-mesh substrate. The values below should be interpreted as **effective / apparent properties** of the film–substrate composite, not intrinsic COF moduli.
+
+**Models used:**
+- Hertz elastic contact: $F = \frac{4}{3} E^* R^{1/2} \delta^{3/2}$
+- Oliver–Pharr reduced modulus: $E^* = \frac{\sqrt{\pi}}{2} \frac{S}{\sqrt{A}}$
+- Yield stress (simplified): $\sigma_y = F_y / (\pi a_y^2)$
+- Hardness: $H = F_{max} / (\pi a_{max}^2)$
+"""
+
+# %% tags=[]
+# ── 10. Mechanical Property Estimation ─────────────────────────────
+R_tip_m = PROBE_RADIUS_NM * 1e-9  # m
+k_cantilever = CANTILEVER_STIFFNESS_N_M
+nu = 0.3  # Poisson ratio (assumed)
+E_tip = 170e9  # Si tip modulus, Pa
+nu_tip = 0.27
+
+deep_contact_items_mech = []
+for d in data:
+    raw_f = np.array(d["raw_f"])
+    baseline_intercept = d["baseline"]["intercept"]
+    if max(raw_f) - baseline_intercept > 50.0:
+        deep_contact_items_mech.append(d)
+
+if not deep_contact_items_mech:
+    print("No deep-contact curves for mechanical property extraction.")
+else:
+    print(f"Mechanical analysis for {len(deep_contact_items_mech)} deep-contact curve(s):\n")
+    n_dc = len(deep_contact_items_mech)
+    n_cols = min(2, n_dc)
+    n_rows = math.ceil(n_dc / n_cols)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(DOUBLE_COL, DOUBLE_COL * 0.5 * n_rows), squeeze=False)
+    axes = axes.flatten()
+
+    mech_rows = []
+    for ax, d in zip(axes, deep_contact_items_mech):
+        z_full = np.array(d["raw_z"][::-1])
+        f_full = np.array(d["raw_f"][::-1])
+        f_corr_full, bl_slope, bl_int, n_pts, bl_status = correct_baseline(z_full, f_full)
+        seg_full = segment_curve(z_full, f_corr_full)
+        contact_idx = seg_full["contact_idx"]
+        z_post = z_full[contact_idx:]
+        f_post = f_corr_full[contact_idx:]
+        delta_nm = z_post - z_post[0]
+        delta_m = delta_nm * 1e-9
+
+        if len(z_post) < 10:
+            ax.text(0.5, 0.5, "Too few points", ha="center", va="center", transform=ax.transAxes)
+            ax.set_title(d["file"].replace(" - NanoScope Analysis.txt", "")[:35])
+            continue
+
+        # Initial contact stiffness (first 20% of post-contact)
+        n_init = max(3, len(z_post) // 5)
+        c_init = np.polyfit(z_post[:n_init], f_post[:n_init], 1)
+        S_total = c_init[0]  # N/m
+        S_contact = S_total * k_cantilever / (k_cantilever - S_total) if k_cantilever != S_total else S_total * 10
+
+        # Hertz reduced modulus from initial contact
+        delta_init_m = delta_m[n_init] if len(delta_m) > n_init else delta_m[-1]
+        A_init = np.pi * R_tip_m * delta_init_m  # m^2
+        E_r = (np.sqrt(np.pi) / 2) * S_contact / np.sqrt(A_init) if A_init > 0 else 0.0  # Pa
+        E_r_MPa = E_r * 1e-6
+        E_sample = E_r / (1 - nu**2) if E_r > 0 else 0.0
+        E_sample_MPa = E_sample * 1e-6
+
+        # Yield stress at z=380 nm if applicable
+        yield_z = 380.0
+        yield_idx = np.argmin(np.abs(z_post - yield_z))
+        F_yield = f_post[yield_idx]
+        delta_yield_m = delta_m[yield_idx]
+        a_yield = np.sqrt(R_tip_m * delta_yield_m) if delta_yield_m > 0 else 1e-9
+        sigma_yield_MPa = (F_yield * 1e-9 / (np.pi * a_yield**2)) * 1e-6 if a_yield > 0 else 0.0
+
+        # Hardness at max load
+        F_max = max(f_post)
+        delta_max_m = delta_m[np.argmax(f_post)]
+        a_max = np.sqrt(R_tip_m * delta_max_m) if delta_max_m > 0 else 1e-9
+        H_MPa = (F_max * 1e-9 / (np.pi * a_max**2)) * 1e-6 if a_max > 0 else 0.0
+
+        # t / a ratios
+        t_film = FILM_THICKNESS_NM * 1e-9
+        a_init = np.sqrt(R_tip_m * delta_init_m) if delta_init_m > 0 else 1e-9
+        t_over_a_init = t_film / a_init
+        t_over_a_yield = t_film / a_yield
+
+        # Plot on ax
+        ax.plot(delta_nm, f_post, "o", markersize=3, color=COLORS[0], alpha=0.5, label="Data", zorder=3)
+
+        # Hertz fit line
+        if delta_init_m > 0:
+            delta_fit = delta_m[delta_m > 0]
+            F_hertz = (4/3) * E_r * np.sqrt(R_tip_m) * delta_fit**1.5 * 1e9  # nN
+            ax.plot(delta_nm[delta_m > 0], F_hertz, "-", linewidth=2, color=COLORS[1], label=f"Hertz E*={E_r_MPa:.1f} MPa", zorder=4)
+
+        ax.axvline(delta_yield_m * 1e9, color=COLORS[3], linestyle="--", linewidth=2, alpha=0.8, label="Yield")
+        ax.set_xlabel("Indentation δ (nm)")
+        ax.set_ylabel("Force (nN)")
+        ax.set_title(d["file"].replace(" - NanoScope Analysis.txt", "")[:35], fontsize=9)
+        ax.legend(fontsize=7, loc="upper left")
+        ax.grid(True, alpha=0.3)
+
+        mech_rows.append({
+            "File": d["file"].replace(" - NanoScope Analysis.txt", "").replace(".spm", ""),
+            "S (N/m)": round(S_total, 3),
+            "E* (MPa)": round(E_r_MPa, 1),
+            "E (MPa)": round(E_sample_MPa, 1),
+            "σ_y (MPa)": round(sigma_yield_MPa, 1),
+            "H (MPa)": round(H_MPa, 1),
+            "t/a_init": round(t_over_a_init, 2),
+            "t/a_yield": round(t_over_a_yield, 2),
+        })
+
+    for j in range(len(deep_contact_items_mech), len(axes)):
+        axes[j].axis("off")
+
+    fig.tight_layout()
+    fig.savefig(f"{OUTPUT_PREFIX}_mechanical_properties.pdf")
+    plt.show()
+    print(f"Saved: {OUTPUT_PREFIX}_mechanical_properties.pdf")
+
+    df_mech = pd.DataFrame(mech_rows)
+    print("\nMechanical properties summary:")
+    print(df_mech.to_string(index=False))
+
+    print("\n" + "="*60)
+    print("IMPORTANT: E and E* are APPARENT (film+substrate) values.")
+    print("The copper-mesh substrate dominates because t/a < 1.")
+    print("For intrinsic COF modulus, use a flat rigid substrate")
+    print("and shallow indentation (δ < t/3).")
+    print("="*60)
