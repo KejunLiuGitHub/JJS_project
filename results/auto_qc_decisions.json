@@ -1,0 +1,547 @@
+{
+  "20260409\\JJS-50nm-1000nm-10nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-1000nm-50nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-1000nm-8nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-1000nm-8nN- - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-1500nm-10nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-1500nm-8nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-1500nm-9nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-454nm-8.862nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-500nm-10nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-500nm-8.862nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260409\\JJS-50nm-500nm-9nN - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-10000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1000nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1000nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1000nm-3.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1000nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1000nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1500nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1500nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1500nm-3.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1500nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1500nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1800nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1800nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1800nm-3.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1800nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1800nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_1800nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1900nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "pipeline_discarded",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-1900nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "pipeline_discarded",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-2000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "pipeline_discarded",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-2200nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "pipeline_discarded",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-2400nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "pipeline_discarded",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-2600nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "pipeline_discarded",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-2800nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "pipeline_discarded",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-3000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "pipeline_discarded",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-300nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_300nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-300nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_300nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-3500nm.spm - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-4000nm.spm - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-5000nm.spm - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-500nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_500nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-500nm-3.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_500nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,insufficient_disp_500nm",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-6000nm.spm - NanoScope Analysis.txt": {
+    "decision": "keep",
+    "reason": "clean",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-7000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-8000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-PFPE-OH-9000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-nls-1000nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-nls-1000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-nls-1500nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-nls-1500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-nls-2000nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-nls-2000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-nls-500nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-nls-500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-paa-1000nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-paa-1000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-paa-100nN-500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-paa-500nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker1-paa-500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.1000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.1500nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.2000nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.2000nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.2500nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.2500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.300nm.-2spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.300nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-.500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-1000nm-2.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-1500nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "repulsive_slope_-0.0000",
+    "auto": true
+  },
+  "20260415\u539f\u59cb\u6570\u636e\\linker2-paa-150nm.spm - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-10000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-1000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_2201.3,repulsive_slope_-0.1320",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-2000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_1498.6",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-3000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_827.3",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-4000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_292.6",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-5000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_226.7",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-500nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_2200.9,repulsive_slope_-0.8522",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-6000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_206.3",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-7000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-8000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-PFNA-50nm-9000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-10000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const,intercept_-200.9",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-1000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_1406.0,repulsive_slope_-0.1488",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-2000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_1739.6,repulsive_slope_-0.2903",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-3000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_1943.4,repulsive_slope_-0.3364",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-4000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_1077.8,repulsive_slope_-0.1568",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-5000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_366.3",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-500nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_1363.6,repulsive_slope_-0.1177",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-6000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "slope_0.3067",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-7000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-8000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-SDBS-50nm-9000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-10000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-1000nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_5410.2",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-12000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const,intercept_-208.3",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-1500nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_4855.1",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-2000nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_3685.8",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-2500nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_2268.2",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-3000nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_765.6",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-3500nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_492.5",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-4000nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_537.8",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-4500nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_372.8",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-5000nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_292.2",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-500nm-3uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_5700.1",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-6000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_226.7",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-7000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-8000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker1-paa-50nm-9000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_OK_const",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker2-paa-50nm-1000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_6856.3",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker2-paa-50nm-1500nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_5291.2",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker2-paa-50nm-2000nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_3872.3",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker2-paa-50nm-200nm-125.5nN-2 - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "slope_0.4904",
+    "auto": true
+  },
+  "20260416\u539f\u59cb\u6570\u636e\\k80-linker2-paa-50nm-500nm-10uN - NanoScope Analysis.txt": {
+    "decision": "discard",
+    "reason": "baseline_repulsive_only,intercept_7760.0",
+    "auto": true
+  }
+}

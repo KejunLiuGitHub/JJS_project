@@ -1,0 +1,16 @@
+{
+  "realraw_dir": "/Users/kejunliu/Desktop/Research_Data/AFM/JJS_project/RealRaw",
+  "dates": [
+    "20260409",
+    "20260415",
+    "20260416"
+  ],
+  "sample_filter": null,
+  "pair_records": 129,
+  "curve_records": 258,
+  "assumptions": {
+    "extend": "approach/loading primary analysis branch",
+    "retract": "unloading branch for adhesion hysteresis and recovery",
+    "outputs": "isolated under results/realraw and reports/realraw"
+  }
+}

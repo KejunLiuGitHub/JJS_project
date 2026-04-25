@@ -39,6 +39,14 @@ env/
 # PyCharm
 .idea/
 
+# Build/intermediate outputs
+*.aux
+*.log
+*.out
+results/cache_*.pkl
+
+# Archive directories are intentionally tracked for provenance.
+
 # Generated outputs (keep source .py, ignore executed .ipynb if desired)
 # Uncomment the next line if you ONLY want .py in Git and treat .ipynb as build artifact
 # reports/*.ipynb

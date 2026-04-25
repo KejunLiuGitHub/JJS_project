@@ -25,7 +25,7 @@ from parser import AFMForceCurve, load_all_curves
 R_PROBE = 8.0          # 探针半径 nm
 T_FILM = 10.0          # 薄膜厚度 nm
 A_HOLE = 10_000.0      # 孔半径 nm (20 um diameter)
-K_CANTILEVER = 5.0     # RTESPA-150 悬臂刚度 N/m (标称值)
+K_CANTILEVER = 7.0     # RTESPA-150 悬臂刚度 N/m (标称值)
 POISSON = 0.25         # 泊松比假设
 
 # 可靠性阈值

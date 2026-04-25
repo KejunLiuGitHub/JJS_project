@@ -5,6 +5,22 @@
 
 ---
 
+## 0. Two-Stage Workflow
+
+```
+Stage 1 — Manual QC (Interactive):
+    python scripts/data_qc_gui.py --dataset <DIR>
+    # Output: results/qc_decisions.json
+
+Stage 2 — Batch Analysis (Automated):
+    python scripts/run_analysis.py --dataset <DIR>
+    # Automatically reads qc_decisions.json and excludes discarded files
+```
+
+The QC decisions are **respected by the analysis pipeline**. `run_analysis.py` loads `results/qc_decisions.json` before execution and passes the discard list to the notebook template. Only "keep" files are processed.
+
+---
+
 ## 1. Architecture Overview
 
 ```

@@ -1,0 +1,7 @@
+category,quantity,evidence,interpretation
+Can extract robustly,Approach attraction scale,extend branch minimum force after branch-aware baseline correction,vdW + capillary + modest dynamic/interface enhancement
+Can extract robustly,Pull-off adhesion,retract branch minimum force,water bridge/contact-line pinning/adhesion hysteresis
+Can extract robustly,Hysteresis and sample ranking,paired extend/retract work and pull-off ratios,relative confined-water/adhesion strength across chemistries
+Semi-quantitative,Effective capillary radius or Hamaker upper bound,force magnitude mapped onto simple sphere-plane models,"diagnostic scale only, not unique microscopic geometry"
+Not reliable from JJS snap/pull-off,"Intrinsic Young's modulus, tension, or stress",too few post-contact points and shallow indentation,"old N/m-scale apparent tension is capillary-water-film coupling, not intrinsic film tension"
+Not independently separable,Solvation force or true water bridge geometry,"no humidity, dry-N2, KPFM, or probe-radius control series","confined water is a plausible mechanism, not a uniquely fitted component"

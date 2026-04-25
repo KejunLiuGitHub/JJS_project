@@ -62,6 +62,32 @@ Line 3+: Z_position(nm)   Force(nN)
 - **Force baseline**: Raw force has a positive offset (~12–16 nN) due to optical lever calibration drift
 - **Snap-in location**: Always in the first ~30 points (Z ≈ 940–1000 nm region)
 
+> ⚠️ **CRITICAL CAVEAT — Manual Retract Distance (2026-04-23 discovery)**
+> 
+> The student manually adjusts the probe **retract distance** between measurements. This means:
+> - **The absolute Z position of snap-in has NO physical meaning** across different curves.
+> - Differences in snap Z (e.g., 221 nm vs 461 nm) do NOT indicate membrane movement, drift, or damage.
+> - **Only relative quantities are physically meaningful:**
+>   - `contact_z - snap_z` (distance from snap-in to mechanical contact)
+>   - Indentation depth `δ = z - contact_z` (post-contact deformation)
+>   - Force values (independent of Z zero)
+> - Curves with "late" snap (close to max displacement) simply had a larger manual retract, leaving less room for indentation. They are NOT failed measurements.
+> 
+> **Analysis implication:** Always analyze post-contact behavior (F vs δ), never compare absolute snap Z positions across curves.
+
+> 🗑️ **DISCARDED DATA — linker1-PFPE-OH low-displacement curves (2026-04-23)**
+>
+> The following PFPE-OH curves are **permanently discarded** from all analysis:
+> - `linker1-PFPE-OH-1900nm.spm` (×2 files)
+> - `linker1-PFPE-OH-2000nm.spm`
+> - `linker1-PFPE-OH-2200nm.spm`
+> - `linker1-PFPE-OH-2400nm.spm`
+> - `linker1-PFPE-OH-2600nm.spm`
+> - `linker1-PFPE-OH-2800nm.spm`
+> - `linker1-PFPE-OH-3000nm.spm`
+>
+> **Reason:** Displacement ≤ 3000 nm is insufficient to reach the high-stiffness tension-dominated regime. These curves show inconsistent, low-k mechanical response (toe-only behavior) and cannot be used for intrinsic membrane property extraction. Only curves with displacement ≥ 3500 nm are retained for PFPE-OH mechanical analysis.
+
 ### 2.3 File Naming Convention
 ```
 JJS-50nm-{DISPLACEMENT}nm-{SETPOINT}nN - NanoScope Analysis.txt
@@ -285,6 +311,7 @@ The JSON used keys like `snap_f_nN`, `contact_z_nm` with units in the name. The 
 | File | Purpose | Size (est.) |
 |------|---------|-------------|
 | `scripts/cleaning.py` | Shared cleaning module | ~150 lines |
+| `scripts/qc_filter.py` | QC decision loader (reads qc_decisions.json) | ~30 lines |
 | `scripts/notebook_cells/cell_a_raw_overview.py` | Raw data inspection cell | ~80 lines |
 | `scripts/notebook_cells/cell_b_baseline_correction.py` | Baseline demo cell | ~100 lines |
 | `scripts/notebook_cells/cell_c_data_cleaning.py` | Cleaning & validation cell | ~120 lines |
@@ -293,12 +320,16 @@ The JSON used keys like `snap_f_nN`, `contact_z_nm` with units in the name. The 
 ### Modified Files
 | File | Changes |
 |------|---------|
-| `reports/JJS_analysis.py` | Remove JSON load, insert 3 new units, refactor 8 existing units |
+| `reports/JJS_analysis.py` | Remove JSON load, insert 3 new units, refactor 8 existing units, add DISCARDED_FILES parameter |
+| `scripts/run_analysis.py` | Auto-load qc_decisions.json, pass discard list to notebook |
+| `scripts/cleaning.py` | Add optional `discard_set` parameter to `load_all_cleaned()` |
 
-### Deprecated (keep as archive)
+### Deprecated (moved to `archive/`)
 | File | Status |
 |------|--------|
 | `results/jjs_transition_deep_analysis.json` | No longer read by notebook |
+| `scripts/test_*.py`, `scripts/debug_*.py`, `scripts/check_*.py` | Archived debug/one-off scripts |
+| `reports/linker1_*.py`, `reports/k80_*.py` (old versions) | Archived duplicate analysis scripts |
 
 ---
 
@@ -353,3 +384,45 @@ kimi
 ### Issue: Figures look different on macOS
 **Cause**: macOS may not have Times New Roman.  
 **Solution**: Matplotlib falls back to DejaVu Serif (already in rcParams). Install Times New Roman if exact font matching is required.
+
+---
+
+## 11. Kimi CLI + VS Code Workflow
+
+### Real-time File Sync
+When Kimi CLI modifies `.py` files on disk, VS Code may not auto-refresh. Two solutions:
+
+**A. Auto-save + Revert keybinding (recommended)**
+- `.vscode/settings.json` is already configured with `files.autoSave: afterDelay` (500 ms)
+- Press `Ctrl+Alt+R` (or `Cmd+Shift+P` → `File: Revert File`) to instantly reload from disk
+- This is faster than closing/reopening the tab
+
+**B. One-key refresh without keybinding**
+- `Cmd+Shift+P` → type `File: Revert File` → Enter
+- The file reloads from disk immediately
+
+### Why This Happens
+VS Code locks the file tab when it detects unsaved edits (dirty state). Kimi CLI writes to disk, but VS Code refuses to overwrite your unsaved changes. Auto-save prevents dirty state; `Revert File` forces reload.
+
+### Recommended Layout
+```
+┌─────────────────┬─────────────────┐
+│                 │  Interactive    │
+│   .py Editor    │    Window       │
+│   (left 50%)    │  (right 40%)    │
+│                 │                 │
+├─────────────────┴─────────────────┤
+│        Terminal (Kimi CLI)        │
+│             (bottom 25%)          │
+└───────────────────────────────────┘
+```
+
+- **Editor**: Read-only reference; refresh with `Ctrl+Alt+R` after Kimi edits
+- **Interactive Window**: Execute cells, inspect variables
+- **Terminal**: Run Kimi CLI commands
+
+### Workflow
+1. Edit/request in terminal → Kimi writes to disk
+2. Editor auto-saves or press `Ctrl+Alt+R` to see changes
+3. Jump to cell in editor → `Shift+Enter` → runs in Interactive Window
+4. Iterate

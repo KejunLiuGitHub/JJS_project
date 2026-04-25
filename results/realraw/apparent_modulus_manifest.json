@@ -1,0 +1,15 @@
+{
+  "curve_rows": 41,
+  "group_rows": 6,
+  "include_dates": [
+    20260415,
+    20260416
+  ],
+  "include_jjs": false,
+  "thickness_nm": 50.0,
+  "thickness_sensitivity_max_nm": 80.0,
+  "poisson_ratio": 0.3,
+  "min_r2": 0.85,
+  "min_fit_points": 8,
+  "note": "E_app is model-dependent and comparative, not intrinsic Young's modulus."
+}

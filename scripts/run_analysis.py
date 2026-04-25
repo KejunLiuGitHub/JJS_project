@@ -25,6 +25,7 @@ except ImportError:
     sys.exit(1)
 
 from dataset_registry import get_config, list_datasets
+from qc_filter import get_discarded_set, summarize
 
 
 def run(dataset_key, output_prefix=None, dry_run=False, pattern_override=None, sample_name_override=None):
@@ -51,6 +52,14 @@ def run(dataset_key, output_prefix=None, dry_run=False, pattern_override=None, s
         "OUTPUT_PREFIX": output_prefix,
         "ENVIRONMENT": cfg["environment"],
     }
+
+    # Load QC decisions if available
+    discarded = get_discarded_set()
+    if discarded:
+        print(f"[QC] Loaded {len(discarded)} discarded file(s) from qc_decisions.json")
+        parameters["DISCARDED_FILES"] = list(discarded)
+    else:
+        parameters["DISCARDED_FILES"] = []
 
     print(f"Dataset:     {dataset_key}")
     print(f"Sample:      {cfg['sample_name']}")

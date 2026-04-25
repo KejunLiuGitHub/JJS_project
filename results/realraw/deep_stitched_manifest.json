@@ -1,0 +1,8 @@
+{
+  "points": 8175,
+  "events": 3,
+  "curves": 41,
+  "recoverable_slips": 3,
+  "terminal_cliffs": 0,
+  "note": "Stitched forces are analysis products; raw_force_nN is preserved."
+}

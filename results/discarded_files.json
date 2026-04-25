@@ -40,5 +40,77 @@
     "reason": "discarded: intercept -229.4 > 200",
     "intercept": -229.35497063308134,
     "far_end_points": 129
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1900nm.spm - NanoScope Analysis.txt",
+    "reason": "DISCARDED BY USER: displacement <= 3000 nm, insufficient indentation to reach high-stiffness regime (low k, inconsistent mechanical response)",
+    "dataset": "20260415原始数据",
+    "sample": "linker1-PFPE-OH",
+    "displacement_nm": 1900,
+    "discard_date": "2026-04-23",
+    "discard_reason_category": "insufficient_indentation_depth"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-1900nm-2.spm - NanoScope Analysis.txt",
+    "reason": "DISCARDED BY USER: displacement <= 3000 nm, insufficient indentation to reach high-stiffness regime (low k, inconsistent mechanical response)",
+    "dataset": "20260415原始数据",
+    "sample": "linker1-PFPE-OH",
+    "displacement_nm": 1900,
+    "discard_date": "2026-04-23",
+    "discard_reason_category": "insufficient_indentation_depth"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-2000nm.spm - NanoScope Analysis.txt",
+    "reason": "DISCARDED BY USER: displacement <= 3000 nm, insufficient indentation to reach high-stiffness regime (low k, inconsistent mechanical response)",
+    "dataset": "20260415原始数据",
+    "sample": "linker1-PFPE-OH",
+    "displacement_nm": 2000,
+    "discard_date": "2026-04-23",
+    "discard_reason_category": "insufficient_indentation_depth"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-2200nm.spm - NanoScope Analysis.txt",
+    "reason": "DISCARDED BY USER: displacement <= 3000 nm, insufficient indentation to reach high-stiffness regime (low k, inconsistent mechanical response)",
+    "dataset": "20260415原始数据",
+    "sample": "linker1-PFPE-OH",
+    "displacement_nm": 2200,
+    "discard_date": "2026-04-23",
+    "discard_reason_category": "insufficient_indentation_depth"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-2400nm.spm - NanoScope Analysis.txt",
+    "reason": "DISCARDED BY USER: displacement <= 3000 nm, insufficient indentation to reach high-stiffness regime (low k, inconsistent mechanical response)",
+    "dataset": "20260415原始数据",
+    "sample": "linker1-PFPE-OH",
+    "displacement_nm": 2400,
+    "discard_date": "2026-04-23",
+    "discard_reason_category": "insufficient_indentation_depth"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-2600nm.spm - NanoScope Analysis.txt",
+    "reason": "DISCARDED BY USER: displacement <= 3000 nm, insufficient indentation to reach high-stiffness regime (low k, inconsistent mechanical response)",
+    "dataset": "20260415原始数据",
+    "sample": "linker1-PFPE-OH",
+    "displacement_nm": 2600,
+    "discard_date": "2026-04-23",
+    "discard_reason_category": "insufficient_indentation_depth"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-2800nm.spm - NanoScope Analysis.txt",
+    "reason": "DISCARDED BY USER: displacement <= 3000 nm, insufficient indentation to reach high-stiffness regime (low k, inconsistent mechanical response)",
+    "dataset": "20260415原始数据",
+    "sample": "linker1-PFPE-OH",
+    "displacement_nm": 2800,
+    "discard_date": "2026-04-23",
+    "discard_reason_category": "insufficient_indentation_depth"
+  },
+  {
+    "file": "20260415原始数据\\linker1-PFPE-OH-3000nm.spm - NanoScope Analysis.txt",
+    "reason": "DISCARDED BY USER: displacement <= 3000 nm, insufficient indentation to reach high-stiffness regime (low k, inconsistent mechanical response)",
+    "dataset": "20260415原始数据",
+    "sample": "linker1-PFPE-OH",
+    "displacement_nm": 3000,
+    "discard_date": "2026-04-23",
+    "discard_reason_category": "insufficient_indentation_depth"
   }
 ]

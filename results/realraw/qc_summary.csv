@@ -1,0 +1,10 @@
+date,branch,curves,valid,warnings,directions
+20260409,extend,11,11,1,"{""inc"": 11}"
+20260409,retract,11,11,2,"{""dec"": 10, ""inc"": 1}"
+20260415,extend,69,69,69,"{""inc"": 69}"
+20260415,retract,69,69,69,"{""dec"": 69}"
+20260416,extend,49,26,23,"{""inc"": 49}"
+20260416,retract,49,18,31,"{""dec"": 49}"
+20260409,pairs,11,11,2,"{""paired"": 11}"
+20260415,pairs,69,69,69,"{""paired"": 69}"
+20260416,pairs,49,49,31,"{""paired"": 49}"

@@ -18,11 +18,31 @@ ETA_CP = 0.4
 EPS0_F_M = 8.854e-12
 
 
-def load_raw(filepath, encoding=None):
+def _detect_direction(z):
+    """Return inc/dec/mixed/empty for a numeric Z array."""
+    if len(z) < 2:
+        return "empty"
+    dz = np.diff(z)
+    if np.all(dz > 0):
+        return "inc"
+    if np.all(dz < 0):
+        return "dec"
+    return "mixed"
+
+
+def load_raw(filepath, encoding=None, branch=None, preserve_time=False):
     """
     解析单个 Bruker txt 文件。
     尝试 utf-8 优先，失败则回退 latin-1。
     返回 dict: {filepath, filename, z_raw, f_raw, z, f, meta}
+
+    branch:
+        None      旧行为：默认将采集数组反转，兼容历史脚本。
+        "extend" 伸出/approach/loading，保留采集顺序作为分析顺序。
+        "retract" 缩回/unloading，保留采集顺序作为分析顺序。
+
+    preserve_time=True 时，即便 branch=None 也保留采集顺序为 z/f。
+    所有返回都会额外包含 z_time/f_time、z_nm/force_nN、direction、branch、source_path。
     """
     filepath = Path(filepath)
     if encoding is None:
@@ -82,20 +102,21 @@ def load_raw(filepath, encoding=None):
     z_vals, f_vals = [], []
     z_unit, f_unit = "nm", "nN"
 
-    # 尝试从 line2 或 line3 提取单位
-    for unit_line in (line2, lines[2].strip() if len(lines) > 2 else ""):
+    # 尝试从前几行提取单位。RealRaw 有些导出没有中文 header，
+    # 第一行就是 "nm uN" 这样的列标题。
+    for unit_line in [ln.strip() for ln in lines[:5]]:
         unit_m = re.search(r"(nm|um|μm)\s+(nN|uN|μN)\s*$", unit_line)
         if unit_m:
             z_unit = unit_m.group(1)
             f_unit = unit_m.group(2)
             break
 
-    for line in lines[2:]:
+    for line in lines:
         line = line.strip()
         if not line:
             continue
         # 跳过列标题重复行
-        if re.search(r"nm\s+nN\s*$", line, re.IGNORECASE):
+        if re.search(r"(nm|um|μm)\s+(nN|uN|μN|pN)\s*$", line, re.IGNORECASE):
             continue
         parts = line.split()
         if len(parts) >= 2:
@@ -116,17 +137,36 @@ def load_raw(filepath, encoding=None):
     elif f_unit == "pN":
         f_raw = f_raw * 1e-3
 
-    # Z 方向反转（Bruker 导出为递减）
-    z = z_raw[::-1].copy()
-    f = f_raw[::-1].copy()
+    branch_norm = branch.lower() if isinstance(branch, str) else None
+    if branch_norm not in (None, "extend", "retract"):
+        raise ValueError(f"Unsupported branch: {branch!r}; expected extend/retract/None")
+
+    # 历史脚本假设 NanoScope 导出需要反转。RealRaw 已经按 extend/retract
+    # 拆分，分支文件的采集顺序本身就是物理分支顺序，因此显式 branch 时不反转。
+    if branch_norm is None and not preserve_time:
+        z = z_raw[::-1].copy()
+        f = f_raw[::-1].copy()
+        analysis_direction = _detect_direction(z)
+    else:
+        z = z_raw.copy()
+        f = f_raw.copy()
+        analysis_direction = _detect_direction(z)
 
     return {
         "filepath": str(filepath),
+        "source_path": str(filepath),
         "filename": filepath.name,
+        "branch": branch_norm,
         "z_raw": z_raw,
         "f_raw": f_raw,
+        "z_time": z_raw.copy(),
+        "f_time": f_raw.copy(),
         "z": z,
         "f": f,
+        "z_nm": z,
+        "force_nN": f,
+        "direction": analysis_direction,
+        "time_direction": _detect_direction(z_raw),
         "meta": meta,
     }
 
@@ -377,19 +417,30 @@ def clean_and_validate(filepath, z_far_max=100.0):
     return result
 
 
-def load_all_cleaned(data_dir, pattern="*.txt"):
+def load_all_cleaned(data_dir, pattern="*.txt", discard_set=None):
     """
     批量加载目录下所有 txt，返回清洗后的 dict 列表（自动过滤 None）。
     按文件名排序。
+    
+    Args:
+        data_dir: 数据目录
+        pattern: 文件匹配模式
+        discard_set: 可选，set of filenames to skip (from QC decisions)
     """
     data_dir = Path(data_dir)
     results = []
+    skipped_discard = 0
     for fp in sorted(data_dir.glob(pattern)):
         if "NanoScope Analysis" not in fp.name:
+            continue
+        if discard_set and fp.name in discard_set:
+            skipped_discard += 1
             continue
         item = clean_and_validate(fp)
         if item is not None:
             results.append(item)
+    if skipped_discard:
+        print(f"[QC] Skipped {skipped_discard} discarded file(s)")
     return results
 
 

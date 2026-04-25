@@ -1,0 +1,30 @@
+{
+  "theory_R8_nm": {
+    "radius_nm": 8.0,
+    "F_vdW_nN": 2.9629629629629632,
+    "F_capillary_nN": 7.238229473870883,
+    "F_vdW_plus_capillary_nN": 10.201192436833846,
+    "F_Casimir_Polder_formal_nN": 2027.7297101430818
+  },
+  "theory_R100_nm": {
+    "radius_nm": 100.0,
+    "F_vdW_nN": 37.03703703703704,
+    "F_capillary_nN": 90.47786842338604,
+    "F_vdW_plus_capillary_nN": 127.51490546042308,
+    "F_Casimir_Polder_formal_nN": 25346.621376788527
+  },
+  "jjs": {
+    "extend_snap_median_nN": 17.287542866661397,
+    "extend_snap_iqr_nN": [
+      14.013115288148915,
+      20.682854827026752
+    ],
+    "retract_pull_off_median_nN": 115.92072458753093,
+    "retract_pull_off_iqr_nN": [
+      108.18984998756892,
+      130.9540499594863
+    ],
+    "pull_to_snap_ratio_median": 7.019998143581452
+  },
+  "caveat": "20260416 k80 statistics should be interpreted with baseline-QC warnings."
+}
