@@ -39,10 +39,14 @@ env/
 # PyCharm
 .idea/
 
+# pytest
+.pytest_cache/
+
 # Build/intermediate outputs
 *.aux
 *.log
 *.out
+*.toc
 results/cache_*.pkl
 
 # Archive directories are intentionally tracked for provenance.
