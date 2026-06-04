@@ -1060,13 +1060,18 @@ def build_mechanics_md_table(mod_group):
 
 
 def append_progress_md(data, tables):
-    """Append a timestamped section to progress.md at repo root."""
+    """Append a detailed scientific log entry to progress.md at repo root."""
     pair = data["pair"]
+    mod_group = data["mod_group"]
+    metrics = data["metrics"]
     assert isinstance(pair, pd.DataFrame)
+    assert isinstance(mod_group, pd.DataFrame)
+    assert isinstance(metrics, dict)
 
     now = datetime.now()
     timestamp = now.strftime("%Y-%m-%d %H:%M")
     ts_compact = now.strftime("%Y%m%d-%H%M")
+    rel = "JJS_project/reports/realraw/scientific_report"
 
     lines = []
     def w(s=""):
@@ -1087,53 +1092,310 @@ def append_progress_md(data, tables):
         w("---")
         w()
 
+    # ── Run entry header ──────────────────────────────────────────
     w(f"## 运行记录")
     w()
     w(f"### {timestamp} — 自动分析 #{ts_compact}")
     w()
-    w(f"**数据**: RealRaw/20260409 (JJS, 11 pairs), RealRaw/20260415 (linker, 69 pairs), RealRaw/20260416 (k80, 49 pairs)")
+
+    # ── 摘要 ──────────────────────────────────────────────────────
+    jjs_extend_val = float(tables['jjs_extend'])
+    theory_sum_val = float(tables['theory_sum'])
+    ratio_val = tables['jjs_ratio']
+    w(f"**摘要**: 本批次分析覆盖三个 RealRaw 数据集（20260409 JJS 11 对曲线, 20260415 linker 系列 69 对, 20260416 k80 系列 49 对）。"
+      f"JJS approach/loading 段吸引力中位数为 **{tables['jjs_extend']} nN**（IQR {tables['jjs_extend_iqr']} nN），"
+      f"与经典 vdW + capillary 估算值 **{tables['theory_sum']} nN** 同量级，"
+      f"仅高出 **{jjs_extend_val/theory_sum_val:.1f} 倍**。"
+      f"retract/unloading 段 pull-off 粘附力中位数 **{tables['jjs_retract']} nN**（IQR {tables['jjs_retract_iqr']} nN），"
+      f"约为 approach 吸引力的 **{ratio_val} 倍**，"
+      f"说明强信号来自接触后液桥/界面钉扎导致的回撤粘附和耗散。"
+      f"k80 系列内 apparent modulus 排序为 **PAA > PFNA > SDBS**。")
     w()
-    w("**关键结果**:")
+
+    # ── 1. 样品体系与探针参数 ─────────────────────────────────────
+    w("### 1. 样品体系与探针参数")
     w()
-    w(f"- JJS extend snap-in: **{tables['jjs_extend']} nN** [{tables['jjs_extend_iqr']} nN]")
-    w(f"- JJS retract pull-off: **{tables['jjs_retract']} nN** [{tables['jjs_retract_iqr']} nN]")
-    w(f"- pull-off/snap-in ratio: **{tables['jjs_ratio']}x**")
-    w(f"- 理论参考 vdW+capillary (R=8nm): **{tables['theory_sum']} nN**")
-    w(f"- extend/理论比值: **{float(tables['jjs_extend'])/float(tables['theory_sum']):.1f}x** — 同量级")
+    w("| 日期 | 主要样品 | 探针 | 半径 (nm) | k (N/m) | 曲线对数 | 主要用途 |")
+    w("|------|---------|------|----------|---------|---------|---------|")
+    jjs_n = len(pair[pair["group"] == "JJS"])
+    linker_n = len(pair[pair["group"].str.startswith("linker")])
+    k80_n = len(pair[pair["group"].str.startswith("k80")])
+    w(f"| 20260409 | JJS | RTESPA-150 | 8 | 7 | {jjs_n} | approach 吸引力、retract 粘附、滞后与水桥机制 |")
+    w(f"| 20260415 | linker1/linker2 | RTESPA-150 | 8 | 7 | {linker_n} | linker 系列粘附差异；linker2-PAA 深压入对照 |")
+    w(f"| 20260416 | k80 系列 | DDESP-V2 | 100 | 89 | {k80_n} | PAA/PFNA/SDBS 表观力学对比 |")
     w()
-    w("**apparent modulus ranking (k80 系列)**: PAA > PFNA > SDBS")
+
+    # ── 2. 力曲线处理方法 ─────────────────────────────────────────
+    w("### 2. 力曲线处理方法")
     w()
-    w("**讨论**:")
+    w("- **extend = approach/loading**: baseline 校正 → snap-in 检测（负力极小值）→ 接触点定位 → post-contact 正力加载段")
+    w("- **retract = unloading/pull-off**: pull-off 检测（回撤分支最强负力）→ 回撤面积积分 → 滞后功计算")
+    w("- **baseline**: 远场低相互作用区（Z ∈ [0, 100] nm）线性拟合扣除")
+    w("- **QC 标准**: baseline 稳定性、曲线点数、单位一致性、深压入最小深度/正力阈值、膜模型 R²")
+    w("- **力统一为 nN，位移和压入深度统一为 nm**")
     w()
-    w("- JJS 接近段吸引力 (~17 nN) 只需略大的有效润湿半径或亲水界面即可解释，不需要 40x Hamaker 增强")
-    w("- 真正的强信号是 retract pull-off (~116 nN)，属于接触后液桥拉伸/接触线钉扎导致的粘附滞后")
-    w("- 当前数据支持限域水桥作为候选机制，但不能独立分离 solvation force 和静电力")
-    w("- 缺少湿度控制和悬浮/支撑对比实验，无法证伪替代解释")
-    w("- k80 系列的 SDBS 组 N=3，统计意义极弱，只能做趋势讨论")
+
+    # ── 3. Approach 吸引力：范德华力与毛细力 ───────────────────────
+    w("### 3. Approach 吸引力：范德华力与毛细力")
     w()
-    w("**文献参考**:")
+    w("#### 3.1 理论模型")
     w()
-    w("- Butt, Cappella, Kappl. *Surface Science Reports* 2005 — AFM 力测量综述")
-    w("- Israelachvili. *Intermolecular and Surface Forces* 2011 — 毛细力/液桥经典")
-    w("- Lee et al. *Science* 2008 — 石墨烯 AFM 压入力学")
-    w("- Xiong et al. *Chemical Science* 2025 — 2D COF 本征力学性能")
+    w("球-平面范德华力（量级估算）：")
+    w()
+    w("$$F_{vdW} = \\frac{A R}{12 d_0^2}$$")
+    w()
+    w("完全润湿上限毛细桥力：")
+    w()
+    w("$$F_{cap} = 4\\pi R \\gamma \\cos\\theta$$")
+    w()
+    w("#### 3.2 理论量级估算（R = 8 nm, A = 4×10⁻¹⁹ J, d₀ = 0.3 nm, γ = 72 mN/m）")
+    w()
+    w(f"- F_vdW ≈ **{tables['theory_vdw']} nN**")
+    w(f"- F_cap ≈ **{tables['theory_cap']} nN**")
+    w(f"- 合计 ≈ **{tables['theory_sum']} nN**")
+    w()
+    w("#### 3.3 JJS extend 吸引力与理论对比")
+    w()
+    w(f"- JJS approach snap-in 实测中位数: **{tables['jjs_extend']} nN** [{tables['jjs_extend_iqr']} nN]")
+    w(f"- 实测/理论比值: **{jjs_extend_val/theory_sum_val:.1f}x** — 同量级")
+    w("- 结论: 仅需稍大的有效润湿半径、较强亲水界面或局部水桥成核即可解释观测量级，不需要异常 Hamaker 增强")
+    w("- 注意: 反推的有效毛细半径或 Hamaker upper bound 只能用于量级判断，不能作为唯一微观机制证明")
+    w()
+    w(f"![approach_theory]({rel}/approach_theory_comparison.png)")
+    w()
+
+    # ── 4. Retract 粘附力与界面滞后 ─────────────────────────────────
+    w("### 4. Retract 粘附力与界面滞后")
+    w()
+    w("#### 4.1 pull-off force 定义")
+    w("pull-off force 是 unloading 曲线中最强负力，代表探针从已形成接触/液桥状态脱离薄膜所需克服的最大粘附力，反映的是**接触后界面脱粘**，不是 approach 阶段的远程吸引力。")
+    w()
+    w("#### 4.2 JJS retract 粘附力统计")
+    w(f"- JJS retract pull-off 中位数: **{tables['jjs_retract']} nN** [{tables['jjs_retract_iqr']} nN]")
+    w(f"- pull-off / snap-in 比值中位数: **{ratio_val} 倍**")
+    w("- 该值远高于 approach 吸引力，说明强信号发生在接触形成后的回撤阶段")
+    w()
+    w("#### 4.3 加载/卸载不对称性的物理机制")
+    w()
+    w("最合理的物理图像：")
+    w("1. 接近时形成水桥或局部接触")
+    w("2. 回撤时水桥被拉伸，三相接触线在亲水/粗糙/缺陷位点钉扎")
+    w("3. 导致负压、延迟断裂和明显能量耗散")
+    w()
+    w("当前数据支持限域水桥作为候选机制，但**不能独立分离** solvation force、静电力和真实水桥几何。")
+    w("关键缺失对照：湿度控制、悬浮/支撑对比、不同探针半径、速度依赖性。")
+    w()
+    w("#### 4.4 滞后功")
+    w("滞后功 = |加载面积 − 卸载面积|，表示单次加卸载周期中的耗散量级。JJS 的滞后功显著大于 linker 和 k80 系列。")
+    w()
+    w(f"![branch_comparison]({rel}/branch_force_comparison.png)")
+    w(f"![hysteresis]({rel}/hysteresis_ratio_work.png)")
+    w()
+
+    # ── 5. 样品间粘附差异 ─────────────────────────────────────────
+    w("### 5. 样品间粘附差异")
+    w()
+    w("| 组别 | 曲线对数 | approach 吸引力 / nN | retract 粘附力 / nN | pull-off/snap-in |")
+    w("|------|---------|---------------------|--------------------|-------------------|")
+    for group in ["JJS", "linker1-PFPE-OH", "linker1-nls", "linker1-paa", "linker2-paa"]:
+        sub = pair[pair["group"] == group]
+        w(f"| {group} | {len(sub)} | {quantile_text(sub['abs_extend_snap_nN'], 2)} | {quantile_text(sub['abs_retract_pull_off_nN'], 2)} | {quantile_text(sub['pull_to_snap_ratio'], 2)} |")
+    w()
+    w("- JJS 的回撤粘附显著强于其接近段吸引力，也强于多数 linker 系列")
+    w("- linker 系列中 PAA 相关样品具有更高 pull-off，提示亲水/带电界面对液桥稳定性和接触线钉扎有增强作用")
+    w("- pull-off force 是本数据中较稳健的实验量（回撤分支清晰负力极值），但限制在于它不是单一物理力")
+    w()
+    w(f"![adhesion_ranking]({rel}/adhesion_ranking.png)")
+    w()
+
+    # ── 6. 深压入曲线与滑脱拼接 ────────────────────────────────────
+    w("### 6. 深压入曲线与滑脱拼接")
+    w()
+    w("- **筛选标准**: 足够 post-contact 正力点、最大压入深度和最大排斥力达到深压入阈值")
+    w("- **recoverable slip**: 力突然下降后后续曲线重新回到上升趋势 → 可用于连续 loading 重构")
+    w("- **terminal cliff**: 末端大幅掉落且不恢复（破膜/脱粘/不可逆接触变化）→ 只保留 cliff 前数据")
+    w("- **stitching 方法**: 对 recoverable slip 后整段施加累计垂直 force offset，使 post-slip 段接到 pre-slip 趋势上。原始力保留为 raw force，stitched force 仅作为拟合视图")
+    w("- **物理边界**: 不适用于断裂强度分析；terminal cliff 之后不做任何修复")
+    w()
+    w(f"![stitch]({rel}/stitch_raw_vs_stitched_examples.png)")
+    w(f"![slip_map]({rel}/slip_event_map.png)")
+    w()
+
+    # ── 7. 薄膜力学模型 ────────────────────────────────────────────
+    w("### 7. 薄膜力学模型")
+    w()
+    w("采用夹持圆形悬膜的 AFM 压入模型 [Lee 2008, Bertolazzi 2011]：")
+    w()
+    w("$$F = k_1\\delta + k_3\\delta^3$$")
+    w()
+    w("- **k₁δ**: 线性项，合并预张力、边界顺应性和低压入接触刚度")
+    w("- **k₃δ³**: 三次项，反映大变形膜拉伸主导的非线性承载")
+    w()
+    w("model-dependent apparent Young's modulus：")
+    w()
+    w("$$E_{app} = \\frac{k_3 a^2}{q^3 t}, \\quad q = \\frac{1}{1.05 - 0.15\\nu - 0.16\\nu^2}$$")
+    w()
+    w("- 默认参数: 孔半径 a = 10 μm, 泊松比 ν = 0.30, 主膜厚 t = 50 nm（另给 t = 80 nm 敏感性）")
+    w("- **E_app 不是本征杨氏模量**，只能用于同一探针、同一批次、同一模型下的相对力学排序")
+    w("- 由于 E_app ∝ a²/t，孔径误差平方放大，膜厚误差线性传递")
+    w()
+    w(f"![model_fits]({rel}/membrane_model_fit_examples.png)")
+    w(f"![thickness]({rel}/thickness_sensitivity.png)")
+    w()
+
+    # ── 8. 表面活性剂对薄膜力学性能的影响 ──────────────────────────
+    w("### 8. 表面活性剂对薄膜力学性能的影响")
+    w()
+    w("| 日期 | 组别 | 有效曲线 | E_app 50nm / MPa | E_app 80nm / MPa | k_high / N/m | R² |")
+    w("|------|------|---------|------------------|------------------|-------------|-----|")
+    for group in ["linker2-paa", "k80-linker1-paa", "k80-linker1-PFNA", "k80-linker1-SDBS", "k80-linker2-paa"]:
+        sub = mod_group[mod_group["group"] == group]
+        if sub.empty:
+            continue
+        row = sub.iloc[0]
+        w(f"| {int(row['date'])} | {display_group(group)} | {int(row['n_valid_model'])} | "
+          f"{fmt(row['E_app_50nm_MPa_median'], 3)} [{fmt(row['E_app_50nm_MPa_q1'], 3)}, {fmt(row['E_app_50nm_MPa_q3'], 3)}] | "
+          f"{fmt(row['E_app_80nm_MPa_median'], 3)} | "
+          f"{fmt(row['high_stiffness_N_m_median'], 3)} | "
+          f"{fmt(row['membrane_r2_median'], 3)} |")
+    w()
+    w("**k80 系列内部排序: PAA > PFNA > SDBS**")
+    w()
+    w("- **k80-linker1-PAA**: E_app 中位数十 MPa 级，承载力最高")
+    w("- **k80-linker1-PFNA**: E_app 低 MPa 级，提示较弱有效承载路径或更多局部软化区域")
+    w("- **k80-linker1-SDBS**: 亚 MPa 到低 MPa，N = 3（标注 low-N 风险，仅做趋势讨论）")
+    w("- **linker2-PAA**: GPa 级 apparent modulus，R² 中位数 ~0.99，可重复性最高；但因探针半径和测试条件不同，不宜直接与 k80 系列做绝对优劣比较")
+    w()
+    w("表面活性剂 → 形貌和缺陷 → 有效承载网络 → AFM 深压入力学响应。PAA 更高的刚度和模量提示更连续的承载网络；PFNA/SDBS 的低模量更符合缺陷密度更高的情形。该因果链仍需形貌和膜厚证据闭合。")
+    w()
+    w(f"![modulus_ranking]({rel}/apparent_modulus_ranking.png)")
+    w(f"![stiffness_vs_modulus]({rel}/stiffness_vs_modulus.png)")
+    w()
+
+    # ── 9. 误差棒与统计表达 ────────────────────────────────────────
+    w("### 9. 误差棒与统计表达")
+    w()
+    w("- **中心值与离散度**: 以每条有效曲线为统计单元，使用 median + IQR（非 mean ± SD），直接反映样品内部不均一性和缺陷导致的曲线间变异")
+    w("- **模型拟合质量**: R² 和残差趋势评估；R² 高说明 k₁δ + k₃δ³ 能描述 stitched loading 包络，不代表模型假设完全真实")
+    w("- **膜厚敏感性**: t 从 50→80 nm 时 E_app 乘以 50/80 = 0.625")
+    w("- **low-N 标注**: N < 5 的组只做趋势讨论（SDBS 组 N=3, k80-linker2-PAA N=0）")
+    w("- **推荐图示**: 单曲线散点叠加 median+IQR 误差棒，同时展示中心趋势、离散度和异常值")
+    w()
+    w(f"![errorbars]({rel}/median_iqr_errorbars.png)")
+    w()
+
+    # ── 10. 与其他薄膜材料的量级比较 ────────────────────────────────
+    w("### 10. 与其他薄膜材料的量级比较")
+    w()
+    w("- **软聚合物薄膜（PDMS 类）**: ~1–3 MPa — k80-PFNA 和 k80-SDBS 接近此区间")
+    w("- **水凝胶/软界面薄膜**: kPa 到低 MPa — 较软表面活性剂组接近软凝胶/弹性体边界")
+    w("- **超薄无机/有机复合膜**: linker2-PAA 的 GPa 量级接近刚性聚合物薄膜或部分多孔有机薄膜")
+    w("- **核心发现**: 不是达到无缺陷二维晶体极限，而是表面化学使实际承载路径跨越多个数量级")
+    w()
+    w(f"![literature]({rel}/literature_modulus_context.png)")
+    w()
+
+    # ── 11. 可提取物理量与科学结论 ──────────────────────────────────
+    w("### 11. 可提取物理量与科学结论")
+    w()
+    w("| 类别 | 物理量 | 解释边界 |")
+    w("|------|--------|---------|")
+    w("| 可稳健提取 | approach attraction scale | 远程吸引力 + 动态 snap-in 量级 |")
+    w("| 可稳健提取 | retract pull-off adhesion | 接触后脱粘/液桥断裂强度 |")
+    w("| 可稳健提取 | hysteresis work | 加载/卸载耗散量级 |")
+    w("| 可稳健提取 | apparent modulus ranking | 同模型下相对薄膜承载能力 |")
+    w("| 半定量 | effective capillary radius | 吸收润湿、粗糙和水桥几何的有效参数 |")
+    w("| 半定量 | effective Hamaker upper bound | 会混入毛细和静电贡献 |")
+    w("| 不可单独提取 | solvation force / true bridge geometry | 需要湿度、干氮、KPFM 或探针半径系列 |")
+    w("| 不可单独提取 | intrinsic Young's modulus | 需要独立膜厚、边界和接触模型验证 |")
+    w()
+
+    # ── 12. 总结与后续实验建议 ─────────────────────────────────────
+    w("### 12. 总结与后续实验建议")
+    w()
+    w("**主要结论**:")
+    w()
+    w("1. 接近段吸引力处于 vdW + capillary 合理量级；真正显著的非对称性出现在回撤粘附和滞后中")
+    w(f"2. JJS pull-off/snap-in 比值 {ratio_val} 倍支持液桥拉伸、界面钉扎和延迟断裂的物理图像")
+    w("3. 深压入结果表明表面活性剂显著改变悬膜有效承载网络：PAA 更强的承载能力，PFNA/SDBS 更软")
+    w("4. 同一 k80 系列内最可靠的排序为 **PAA > PFNA > SDBS**；linker2-PAA 显示 GPa 级最高可重复性")
+    w("5. 所有模量均为 model-dependent apparent modulus，不解释为本征 Young's modulus")
+    w()
+    w("**后续实验建议**:")
+    w()
+    w("- 膜厚统计（SEM 截面 / 椭偏仪）—— 当前最大不确定性来源")
+    w("- AFM height/phase 或 SEM/TEM 形貌 —— 闭合缺陷-结构-性能因果链")
+    w("- 湿度/干氮对照实验 —— 分离水桥贡献")
+    w("- 不同探针半径系列（R = 8, 100 nm）—— 验证接触力学模型")
+    w("- 悬浮 vs 支撑对比 —— 排除基底效应")
+    w("- 增大低 N 组样本量（尤其是 SDBS）")
+    w()
+
+    # ── 13. 文献参考 ───────────────────────────────────────────────
+    w("### 13. 文献参考")
+    w()
+    w("1. Butt, H.-J.; Cappella, B.; Kappl, M. *Surface Science Reports* **2005**, 59, 1–152. https://doi.org/10.1016/j.surfrep.2005.08.003")
+    w("2. Israelachvili, J. N. *Intermolecular and Surface Forces*, 3rd ed.; Academic Press, 2011.")
+    w("3. Lee, C.; Wei, X.; Kysar, J. W.; Hone, J. *Science* **2008**, 321, 385–388.")
+    w("4. Bertolazzi, S.; Brivio, J.; Kis, A. *ACS Nano* **2011**, 5, 9703–9709.")
+    w("5. Jagiełło, J.; et al. *Gels* **2024**. https://pmc.ncbi.nlm.nih.gov/articles/PMC11944691/")
+    w("6. Su, T.; et al. *ACS Macro Letters* **2016**, 5, 1217–1221.")
+    w("7. Liu, M.; et al. *Advanced Science* **2023**. https://pmc.ncbi.nlm.nih.gov/articles/PMC10700310/")
+    w("8. Xiong, L.; et al. *Chemical Science* **2025**, 16, 15913–15925. https://doi.org/10.1039/D5SC02180D")
+    w()
+
+    # ── 14. 关键图表 ────────────────────────────────────────────────
+    w("### 14. 关键图表")
+    w()
+    w(f"![approach_theory]({rel}/approach_theory_comparison.png)")
+    w("*图: JJS approach 吸引力与 vdW + capillary 理论量级对比*")
+    w()
+    w(f"![branch_comparison]({rel}/branch_force_comparison.png)")
+    w("*图: extend snap-in 与 retract pull-off 对比（纵轴 log scale）*")
+    w()
+    w(f"![hysteresis]({rel}/hysteresis_ratio_work.png)")
+    w("*图: pull-off/extend ratio 与 hysteresis work 分布*")
+    w()
+    w(f"![adhesion_hysteresis]({rel}/adhesion_hysteresis_ranking.png)")
+    w("*图: 不同组别粘附滞后对比*")
+    w()
+    w(f"![adhesion_ranking]({rel}/adhesion_ranking.png)")
+    w("*图: 不同样品 retract pull-off 粘附力排序*")
+    w()
+    w(f"![stitch]({rel}/stitch_raw_vs_stitched_examples.png)")
+    w("*图: 深压入曲线拼接前后对比*")
+    w()
+    w(f"![slip_map]({rel}/slip_event_map.png)")
+    w("*图: 滑脱事件分布图*")
+    w()
+    w(f"![model_fits]({rel}/membrane_model_fit_examples.png)")
+    w("*图: 代表性膜模型拟合曲线（F = k₁δ + k₃δ³）*")
+    w()
+    w(f"![thickness]({rel}/thickness_sensitivity.png)")
+    w("*图: 膜厚敏感性分析（50 nm vs 80 nm）*")
+    w()
+    w(f"![modulus_ranking]({rel}/apparent_modulus_ranking.png)")
+    w("*图: 不同表面活性剂 E_app 散点图（median + IQR）*")
+    w()
+    w(f"![stiffness_vs_modulus]({rel}/stiffness_vs_modulus.png)")
+    w("*图: apparent stiffness vs apparent modulus*")
+    w()
+    w(f"![errorbars]({rel}/median_iqr_errorbars.png)")
+    w("*图: 带原始散点、median 和 IQR 的力学性能图*")
+    w()
+    w(f"![literature]({rel}/literature_modulus_context.png)")
+    w("*图: 本体系 apparent modulus 与文献中典型薄膜材料模量范围对比*")
+    w()
+    w(f"![workflow]({rel}/workflow_scheme.png)")
+    w("*图: AFM 力曲线分析流程图*")
     w()
     w("**完整报告**: [afm_scientific_report.md](JJS_project/reports/realraw/scientific_report/afm_scientific_report.md)")
     w()
-    w("**关键图表**:")
-    w()
-    rel = "JJS_project/reports/realraw/scientific_report"
-    w(f"![approach_theory]({rel}/approach_theory_comparison.png)")
-    w(f"![branch_comparison]({rel}/branch_force_comparison.png)")
-    w(f"![hysteresis]({rel}/hysteresis_ratio_work.png)")
-    w(f"![modulus_ranking]({rel}/apparent_modulus_ranking.png)")
-    w()
 
-    # Write to progress.md
+    # ── Write to progress.md ──────────────────────────────────────
     content = "\n".join(lines)
     if PROGRESS_MD.exists():
         existing = PROGRESS_MD.read_text(encoding="utf-8")
-        # Extract only the new run entry (skip header + project overview if already exists)
         run_section_start = content.find(f"### {timestamp}")
         if run_section_start > 0:
             new_entry = content[run_section_start:]
