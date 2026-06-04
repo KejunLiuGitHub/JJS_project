@@ -2,9 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**⚖️ 本项目的宪法文件: `.claude/constitution.md`。任何操作前必须先理解宪法规则。**
+**⚖️ 宪法优先级高于本文件。与本文件冲突时以宪法为准。**
+
 ## Project Overview
 
 AFM force-distance curve analysis for 2D COF (covalent organic framework) thin films. Raw data comes from Bruker NanoScope PeakForce QNM mode. The main analysis codebase is in `JJS_project/`; `1umSquare/` contains a separate set of raw Bruker data for NLS/linker experiments.
+
+## Constitutional Rules (摘要 — 完整版见 .claude/constitution.md)
+
+1. **progress.md 是项目中心**: 每次运行必须追加新条目（14 章节完整格式），只增不改。
+2. **文献引用必须有本地文件 + 行号**: 所有引用必须指向 `literature/*.md` 的特定行号范围。没有本地文献文件的文章不得引用。引用前必须先 Read 对应文件。
+3. **代码纪律**: scripts/ 中只有能跑通的代码。不能跑的移入 archive/。
+4. **Git 分支**: 学生不直接 push main。学生在 `student/<name>/<topic>` 分支工作，通过 PR 合并。
+5. **学生可改**: RealRaw/数据, dataset_registry.py, progress.md, literature/。**不可改**: 其他 scripts/、CLAUDE.md、constitution.md、README.md、.gitignore。
 
 ## Key Commands
 
@@ -89,9 +100,11 @@ The central scientific question is: does the suspended ultra-thin COF membrane a
 
 ## Conventions
 
-- **Markdown-first reports**: `generate_scientific_report.py` outputs standalone `.md` files with embedded figures — no LaTeX/PDF dependency. The `progress.md` at repo root is append-only; each run adds a new timestamped section.
+- **Constitution first**: Before any action, understand `.claude/constitution.md`. Key rules: progress.md is sacred (append-only, 14-section entries), all citations must reference `literature/*.md` with line numbers, students work on branches.
+- **Markdown-first reports**: `generate_scientific_report.py` outputs standalone `.md` files with embedded figures — no LaTeX/PDF dependency. The `progress.md` at repo root is append-only; each run adds a new timestamped 14-section entry.
+- **Literature citations**: All scientific citations MUST reference a local file in `literature/` with specific line numbers. Format: `[AuthorYear](literature/File.md#Lxxx-Lxxx)`. Read the file before citing. No local file = no citation allowed.
 - **Figure specs**: PDF vector output, `plt.rcParams['pdf.fonttype'] = 42`, single-col 3.39 inch, double-col 7.01 inch. Color palette: `['#0C5DA5', '#E8204E', '#00B945', '#FF9500', '#845B97', '#474747']`.
 - **Force sign**: negative = attractive (tip pulled toward sample), positive = repulsive.
 - **Encoding**: Bruker .txt files use utf-8 or latin-1. `cleaning.py` auto-detects.
 - **Z direction**: Bruker exports Z decreasing. `cleaning.py` reverses it so Z increases for analysis, unless `branch="extend"` or `branch="retract"` is explicitly passed (RealRaw data is already in branch order).
-- **Git**: Commit messages in English. Do not delete old results or data.
+- **Git**: Commit messages in English. Do not delete old results or data. Students push to `student/<name>/<topic>` branches, not main.

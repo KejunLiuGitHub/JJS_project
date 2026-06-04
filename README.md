@@ -1,268 +1,209 @@
-# AFM 二维聚合物薄膜力学分析 — 学生使用指南
+# AFM 二维聚合物薄膜力学分析
 
-> 本指南教你如何借助 AI 编程助手（Claude Code）完成 AFM 力曲线数据的自动分析。
-> **核心原则：你只需要把数据放进来，告诉 AI 一句话，剩下的交给他。**
+> **一句话**: 把原始数据放到指定文件夹，告诉 AI Agent "跑全流程"，结果自动写入 `progress.md`。
+>
+> **学生不需要手动运行任何代码。一切都通过 AI Agent 完成。**
 
 ---
 
 ## 目录
 
-1. [环境准备](#1-环境准备)
-2. [项目结构速览](#2-项目结构速览)
-3. [新数据放进来怎么跑](#3-新数据放进来怎么跑)
-4. [与 AI Agent 协作的工作流](#4-与-ai-agent-协作的工作流)
-5. [progress.md — 你的实验日志](#5-progressmd--你的实验日志)
-6. [命令速查](#6-命令速查)
-7. [常见问题](#7-常见问题)
+1. [项目是什么](#1-项目是什么)
+2. [学生怎么用（只需 3 步）](#2-学生怎么用只需-3-步)
+3. [AI Agent 会自动做什么](#3-ai-agent-会自动做什么)
+4. [Git 协作流程（必读）](#4-git-协作流程必读)
+5. [什么能改，什么不能改](#5-什么能改什么不能改)
+6. [progress.md — 你的实验日志](#6-progressmd--你的实验日志)
+7. [环境准备（一次性）](#7-环境准备一次性)
 
 ---
 
-## 1. 环境准备
+## 1. 项目是什么
+
+AFM 力-距离曲线自动分析系统。原始数据来自 **Bruker NanoScope PeakForce QNM** 模式。
+
+**分析对象**: 二维 COF (共价有机框架) 悬浮薄膜的力学性能与界面粘附。
+
+**核心科学问题**: 超薄 COF 薄膜是否通过液桥-膜顺应性耦合放大了粘附滞后？
+
+**三个数据集**: JJS (<10nm 非晶膜)、linker 系列 (50-80nm 结晶膜)、k80 系列 (表面活性剂对照)。
+
+---
+
+## 2. 学生怎么用（只需 3 步）
+
+### 第 1 步: 把原始数据放进去
+
+将 Bruker 导出的 `.txt` 文件按分支放入:
+
+```
+JJS_project/RealRaw/YYYYMMDD/extend/    ← 接近段 (approach)
+JJS_project/RealRaw/YYYYMMDD/retract/   ← 回撤段 (retract)
+```
+
+> 同一条曲线的 extend 和 retract 文件**必须同名**，脚本自动配对。
+
+### 第 2 步: 告诉 AI Agent
+
+在 Claude Code 中打开本项目，说:
+
+> "新数据在 RealRaw/20260615，帮我注册并跑全流程"
+
+AI Agent 会自动完成一切。
+
+### 第 3 步: 检查 progress.md
+
+打开 `progress.md`，查看最新追加的分析结果。如果有自己的观察或判断，告诉 AI Agent:
+
+> "在 progress.md 最新条目里补充：这批样品湿度 ~45%，pull-off 比之前大是合理的"
+
+**你不需要手动运行任何 Python 命令。** 环境配置好以后，所有操作都通过对 AI Agent 说话完成。
+
+---
+
+## 3. AI Agent 会自动做什么
+
+当你告诉 AI Agent 跑新数据时，它会按顺序执行:
+
+| 步骤 | 脚本 | 做什么 |
+|------|------|--------|
+| 1 | `run_realraw_analysis.py` | 分支配对 → baseline 校正 → snap-in/contact/pull-off 检测 → 特征提取 |
+| 2 | `realraw_scientific_reinterpretation.py` | 力符号校正 → 科学量换算 → 理论参考值计算 |
+| 3 | `stitch_deep_indentation.py` | 深压入曲线可恢复滑脱检测与拼接 |
+| 4 | `compute_apparent_modulus.py` | F = k₁δ + k₃δ³ 模型拟合 → 表观模量计算 |
+| 5 | `generate_scientific_report.py` | 13 张图表 + Markdown 科学报告 + 追加 progress.md |
+
+每一步检查缓存，已计算过的自动跳过（除非说 `--force`）。
+
+---
+
+## 4. Git 协作流程（必读）
+
+### 规则
+
+- **`main` 分支由教师维护。学生不直接 push 到 main。**
+- 学生在自己的分支上工作，通过 Pull Request 申请合并。
+- 教师审查后批准或拒绝。
+
+### 学生工作流
 
 ```bash
-# Python 3.9+
+# 1. 拉取最新代码
+git pull origin main
+
+# 2. 创建自己的分支（用你的名字）
+git checkout -b student/你的名字/做了什么
+
+# 3. 添加新数据
+cp -r /你的数据/20260615 JJS_project/RealRaw/
+
+# 4. 告诉 AI Agent 注册数据并跑全流程（AI 会修改 dataset_registry.py + progress.md）
+
+# 5. 提交
+git add JJS_project/RealRaw/20260615/ JJS_project/scripts/dataset_registry.py progress.md
+git commit -m "add: 20260615 数据, 更新 progress.md"
+git push origin student/你的名字/做了什么
+
+# 6. 在 Gitee 上创建 Pull Request，等教师审查
+```
+
+### 教师审查
+
+教师在合并前检查:
+- 数据是否正确放入 extend/retract 分支
+- progress.md 条目是否完整
+- 文献引用是否满足宪法标准（本地文件 + 行号）
+- 是否误改了受保护文件
+
+---
+
+## 5. 什么能改，什么不能改
+
+### 学生可以自由修改
+
+| 文件/目录 | 用途 |
+|-----------|------|
+| `JJS_project/RealRaw/` | 放新数据 |
+| `JJS_project/scripts/dataset_registry.py` | 注册新数据集 |
+| `progress.md` | 添加讨论、观察、笔记 |
+| `literature/` (除 README.md) | 添加新文献 MD |
+
+### 学生不能改（需要教师审批）
+
+| 文件/目录 | 原因 |
+|-----------|------|
+| `JJS_project/scripts/*.py` (除 dataset_registry.py) | 分析逻辑，需要统一维护 |
+| `CLAUDE.md` | AI Agent 的行为说明书 |
+| `.claude/constitution.md` | 项目宪法 |
+| `literature/README.md` | 文献库格式规范 |
+| `.gitignore` | 仓库配置 |
+
+> **这个设计保证你既能跑自己的数据，又不会误改分析核心代码。**
+>
+> 如果你觉得某个脚本需要改进，在 PR 描述里写清楚，教师审查后决定是否采纳。
+
+---
+
+## 6. progress.md — 你的实验日志
+
+`progress.md` 是项目**最重要的文件**。它是:
+- 实验笔记本
+- 科学讨论草稿
+- 文献笔记
+- 与导师沟通的基础
+
+每次 AI Agent 跑完分析，会自动追加一个新条目，包含 14 个章节:
+摘要、样品参数表、方法、理论模型与公式、approach 吸引力结果、retract 粘附与滞后、样品间比较、深压入拼接、膜力学模型、表观模量排序、统计注意事项、文献比较、可提取物理量、总结与展望。
+
+**你应该做的**: 每次跑完后打开 `progress.md`，看最新条目，用自己的专业知识补充判断。告诉 AI Agent 你想加什么，它会帮你写好。
+
+---
+
+## 7. 环境准备（一次性）
+
+```bash
+# 1. 安装依赖
 pip install numpy scipy matplotlib pandas pyyaml pytest
-```
 
-克隆仓库后，确保在 `AFM/` 根目录下工作（不是 `JJS_project/` 里面）：
+# 2. 克隆仓库
+git clone https://gitee.com/sculkj/afm_machanics.git
+cd afm_machanics
 
-```bash
-cd /path/to/AFM
-python JJS_project/scripts/run_full_pipeline.py --dry-run  # 测试是否正常
+# 3. 验证环境（告诉 AI Agent 就行，不用自己跑）
+# "帮我 dry-run 一下看环境对不对"
 ```
 
 ---
 
-## 2. 项目结构速览
+## 附录: 项目文件结构速览
 
 ```
 AFM/
 ├── README.md                     ← 你正在看的文件
-├── CLAUDE.md                     ← AI Agent 的"项目说明书"（不要删）
-├── progress.md                   ← ★ 你的实验日志（每次分析会自动追加）
+├── CLAUDE.md                     ← AI Agent 的"项目说明书"
+├── progress.md                   ← ★ 实验日志（核心文件）
+├── .claude/constitution.md       ← 项目宪法（规则与纪律）
+├── .gitignore
 │
-├── JJS_project/                  ← 主分析代码库
-│   ├── scripts/
-│   │   ├── run_full_pipeline.py              ← 一键运行全流程（入口）
-│   │   ├── run_realraw_analysis.py           ← 步骤1：分支识别 + 力曲线特征提取
-│   │   ├── realraw_scientific_reinterpretation.py ← 步骤2：科学量重新解释
-│   │   ├── stitch_deep_indentation.py        ← 步骤3：深压入滑脱拼接
-│   │   ├── compute_apparent_modulus.py       ← 步骤4：表观模量拟合
-│   │   ├── generate_scientific_report.py     ← 步骤5：图表 + Markdown 报告 + progress.md
-│   │   ├── cleaning.py                       ← AFM 原始数据解析与基线校正
-│   │   ├── dataset_registry.py               ← ★ 数据集注册表（新数据在这里登记）
-│   │   └── data_qc_gui.py                    ← 交互式数据质控
-│   │
-│   ├── RealRaw/                   ← ★ 把原始数据放这里
-│   │   ├── YYYYMMDD/              ←   每个数据集的日期文件夹
-│   │   │   ├── extend/            ←   接近段（loading）原始 .txt
-│   │   │   └── retract/           ←   回撤段（unloading）原始 .txt
+├── literature/                   ← ★ 文献库（带行号的 MD）
+│   ├── README.md                 ← 文献库使用说明
+│   ├── Butt_2005_SurfSciRep.md   ← AFM 力测量综述 (L001-L060)
+│   ├── Lee_2008_Science.md       ← 石墨烯压入力学 (L001-L042)
+│   └── ...                       ← 其他文献
+│
+├── JJS_project/
+│   ├── scripts/                  ← 分析脚本（学生只读）
+│   │   ├── run_full_pipeline.py          ← 一键全流程
+│   │   ├── cleaning.py                   ← 原始数据解析
+│   │   ├── dataset_registry.py           ← ★ 数据集注册（学生可改）
 │   │   └── ...
-│   │
-│   ├── results/realraw/           ← 中间计算结果（CSV/JSON）
-│   └── reports/realraw/           ← 图表 + 最终 Markdown 报告
+│   ├── RealRaw/                  ← ★ 原始数据放这里
+│   │   └── YYYYMMDD/
+│   │       ├── extend/
+│   │       └── retract/
+│   ├── results/realraw/          ← 中间计算结果
+│   ├── reports/realraw/          ← 图表 + Markdown 报告
+│   └── archive/                  ← 历史归档代码
 │
-└── 1umSquare/                     ← 独立的 1μm 方孔数据（NLS/linker 实验）
+└── 1umSquare/                    ← 独立的 1μm 方孔实验数据
 ```
-
----
-
-## 3. 新数据放进来怎么跑
-
-### 3.1 放置原始数据
-
-将 Bruker NanoScope 导出的 `.txt` 文件按分支放入对应目录：
-
-```
-JJS_project/RealRaw/20260615/extend/    ← 接近段文件放这里
-JJS_project/RealRaw/20260615/retract/   ← 回撤段文件放这里
-```
-
-> **关键约定**：extend = 探针伸出 = approach/loading，retract = 探针缩回 = unloading/pull-off。
-> 同一条曲线的 extend 和 retract 文件必须**同名**，脚本会自动配对。
-
-### 3.2 注册数据集
-
-在 `JJS_project/scripts/dataset_registry.py` 中添加新条目：
-
-```python
-DATASETS = {
-    # ... 已有的条目 ...
-    "RealRaw/20260615": {
-        "sample": "你的样品名",
-        "probe": "DDESP-V2",       # 或 RTESPA-150
-        "k": 89.0,                 # 探针刚度 N/m
-        "R": 100.0,                # 针尖半径 nm
-        "pattern": "*.txt",
-        "units": "nm_nN",
-    },
-}
-```
-
-### 3.3 一键运行
-
-```bash
-cd /path/to/AFM
-python JJS_project/scripts/run_full_pipeline.py
-```
-
-输出：
-- 13 张科学图表（PDF + PNG）→ `JJS_project/reports/realraw/scientific_report/`
-- 完整 Markdown 报告 → `JJS_project/reports/realraw/scientific_report/afm_scientific_report.md`
-- 自动追加实验日志 → `progress.md`
-
-### 3.4 把新数据告诉 AI Agent
-
-如果你在使用 Claude Code，只需说：
-
-> "新数据在 RealRaw/20260615，帮我加到 dataset_registry.py 然后跑全流程"
-
-Agent 会自动完成：登记 → 运行 → 生成报告 → 更新 progress.md。
-
----
-
-## 4. 与 AI Agent 协作的工作流
-
-### 4.1 日常工作流
-
-```
-你准备好原始数据 → 放到 RealRaw/ 下
-        ↓
-你告诉 AI Agent 一句话 → "新数据 20260615，跑全流程"
-        ↓
-AI Agent 自动执行：
-  1. 注册数据集（如果还没注册）
-  2. 运行 run_full_pipeline.py
-  3. 生成图表 + Markdown 报告
-  4. 追加一条记录到 progress.md（含讨论和文献）
-        ↓
-你检查 progress.md → 阅读新结果 → 补充你的判断
-```
-
-### 4.2 你可以让 AI Agent 做的事情
-
-| 你说的话 | Agent 做的事 |
-|---------|-------------|
-| "跑全流程" | `python JJS_project/scripts/run_full_pipeline.py` |
-| "只看 step 5，重新生成报告" | `python JJS_project/scripts/generate_scientific_report.py` |
-| "帮我看下新数据里 extend snap-in 比之前大了多少" | 读取 CSV，对比 progress.md 中的历史值 |
-| "progress.md 里的讨论部分加上湿度控制的分析" | 在 progress.md 最新条目中追加讨论段落 |
-| "搜一下最近关于 2D COF 力学性能的文献" | 用 WebSearch 检索并总结 |
-| "帮我解释为什么这次的 pull-off 力特别大" | 结合计算结果和物理机制给出分析 |
-
-### 4.3 使用技巧
-
-1. **先跑后问**：数据放好 → 跑全流程 → progress.md 更新后 → 再和 Agent 讨论结果。
-2. **progress.md 是对话基础**：Agent 会把 progress.md 当"记忆"，用它来理解你做了哪些实验、发现了什么趋势。
-3. **有问题就追问**：比如"为什么 JJS 的 retract pull-off 比 extend snap-in 大 7 倍？"Agent 会从报告和文献角度解释。
-4. **一个数据集一个日期文件夹**：不要混放，否则分支配对会出错。
-
----
-
-## 5. progress.md — 你的实验日志
-
-### 5.1 它是什么
-
-`progress.md` 是**整个项目的核心输出**。它是一本自动生成的实验日志，位于仓库根目录：
-
-```
-AFM/progress.md
-```
-
-每次运行全流程，脚本会在文件末尾自动追加一个新的章节，包含：
-- 时间戳（`2026-06-04 14:30 — 自动分析 #20260604-1430`）
-- 数据来源（哪些数据集被分析了）
-- 关键数值结果（snap-in 力、pull-off 力、模量排序等）
-- 物理讨论（机制分析、统计局限性、需要补充的实验）
-- 文献参考
-- 关键图表（嵌入图片链接）
-
-### 5.2 为什么它是你要维护的文件
-
-`progress.md` 是你的**科学对话记录**。当你和导师讨论、写论文、或者几个月后回头看数据时，它会告诉你：
-
-- 哪次跑了哪些样品
-- 发现了什么规律
-- 当时的解释是什么
-- 哪些结论是可靠的，哪些需要更多数据
-
-**每次跑完流程，你应该：**
-
-1. 打开 `progress.md`，看最新追加的条目
-2. 检查自动生成的讨论是否准确
-3. 必要时让 AI Agent 补充你的判断：
-   > "progress.md 里最新的讨论，加上：这批样品湿度 ~45%，比 JJS 那批高，所以 pull-off 更大是合理的"
-4. 把 `progress.md` 提交到 git，作为实验记录永久保存
-
-### 5.3 手动追加内容
-
-如果你有独立的观察或新想法，可以直接告诉 AI Agent：
-
-> "在 progress.md 里加一条手动记录：今天换了新探针，校准值 k=92.3 N/m"
-
-Agent 会以正确格式追加。
-
----
-
-## 6. 命令速查
-
-```bash
-# 全流程（跳过已缓存的步骤）
-python JJS_project/scripts/run_full_pipeline.py
-
-# 全流程（强制重新计算所有步骤，包括生成图表）
-python JJS_project/scripts/run_full_pipeline.py --force
-
-# 预览会执行什么（不实际运行）
-python JJS_project/scripts/run_full_pipeline.py --dry-run
-
-# 只要中间计算，不要图表和报告
-python JJS_project/scripts/run_full_pipeline.py --skip-figures
-
-# 单独跑某一步
-python JJS_project/scripts/run_realraw_analysis.py --all          # 步骤1
-python JJS_project/scripts/realraw_scientific_reinterpretation.py # 步骤2
-python JJS_project/scripts/stitch_deep_indentation.py             # 步骤3
-python JJS_project/scripts/compute_apparent_modulus.py --all      # 步骤4
-python JJS_project/scripts/generate_scientific_report.py          # 步骤5
-
-# 交互式数据质控（在批量分析前手动筛数据）
-python JJS_project/scripts/data_qc_gui.py --dataset RealRaw/20260409
-
-# 运行测试
-python -m pytest JJS_project/tests/ -v
-```
-
----
-
-## 7. 常见问题
-
-### Q: extend 和 retract 是什么？
-
-Bruker AFM 的一个完整力曲线周期包括两段：
-- **extend（接近段）**：探针向样品表面靠近，记录的是 snap-in（跳入接触）+ loading
-- **retract（回撤段）**：探针从表面离开，记录的是 unloading + pull-off（拉脱粘附）
-
-**重要**：早期分析曾把 retract 和 extend 搞混，导致报告了错误的 ~120 nN "接近段吸附力"。正确的值是 extend snap-in ~17 nN，retract pull-off ~116 nN。这一修正已写入 CLAUDE.md，Agent 不会重复这个错误。
-
-### Q: 为什么跑全流程时有些步骤被跳过了？
-
-每个步骤会检查输出文件是否已存在。如果存在就跳过（节省时间）。用 `--force` 强制重跑。
-
-### Q: 数据文件该用什么单位？
-
-Bruker 导出通常是 nm（位移）和 nN（力）。`cleaning.py` 支持 nm/μm 和 nN/μN/pN 的自动识别。把原始 .txt 文件直接放进去就行，不要手动预处理。
-
-### Q: 报告里的"表观模量"是杨氏模量吗？
-
-不是。表观模量 (`E_app`) 是从 F = k₁δ + k₃δ³ 膜力学模型反算出来的相对比较量，依赖于厚度假设和模型选择。它只能做**样品间排序**（比如 PAA > PFNA > SDBS），不能直接当杨氏模量用。
-
-### Q: 能不能用其他 AI 工具（Cursor、Copilot）？
-
-可以。核心是 `CLAUDE.md` 里有完整的项目上下文，`progress.md` 记录分析历史。任何能读取这两个文件的 AI 工具都能理解项目。
-
-但 Claude Code 的 Agent 模式可以**全自动执行**（从数据注册到报告生成到 progress.md 更新），其他工具可能需要你逐步骤手动引导。
-
----
-
-> **最后再说一遍**：数据放好 → 告诉 AI "跑全流程" → 检查 `progress.md` → 和 AI 讨论。这就是整个工作流。
