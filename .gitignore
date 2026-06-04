@@ -1,0 +1,81 @@
+# ── System files ──────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Editor / IDE ─────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ── Python ───────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+*.egg
+.venv/
+venv/
+.env
+env/
+*.manifest
+*.spec
+
+# ── Jupyter ──────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── pytest / coverage ───────────────────────────────────────────
+.pytest_cache/
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# ── LaTeX artifacts ──────────────────────────────────────────────
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
+# ── macOS resource forks ─────────────────────────────────────────
+*.rsrc
+
+# ── Large data archives (keep raw .txt, ignore zips) ────────────
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ── Temporary / cache files ──────────────────────────────────────
+*.bak
+*.tmp
+*.temp
+results/cache_*.pkl
+
+# ── User-specific configuration ──────────────────────────────────
+local_config.py
+.env.*
+!.env.example

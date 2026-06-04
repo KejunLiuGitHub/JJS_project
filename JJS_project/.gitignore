@@ -1,56 +1,9 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# Project-specific ignores (global rules in ../.gitignore)
+# Generated outputs
+results/cache_*.pkl
 
-# Virtual environments
-.env
-.venv
-venv/
-ENV/
-env/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# VS Code
-.vscode/
-
-# macOS
-.DS_Store
-
-# PyCharm
-.idea/
-
-# pytest
-.pytest_cache/
-
-# Build/intermediate outputs
+# LaTeX artifacts
 *.aux
 *.log
 *.out
 *.toc
-results/cache_*.pkl
-
-# Archive directories are intentionally tracked for provenance.
-
-# Generated outputs (keep source .py, ignore executed .ipynb if desired)
-# Uncomment the next line if you ONLY want .py in Git and treat .ipynb as build artifact
-# reports/*.ipynb

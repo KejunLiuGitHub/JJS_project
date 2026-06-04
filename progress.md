@@ -4,7 +4,7 @@
 
 ## 项目概览
 
-- **样品**: JJS (<10nm 非晶COF薄膜, SiN孔), linker系列 (50-80nm 结晶COF, 铜网), k80系列 (50-80nm, 铜网)
+- **样品**: JJS (<10nm COF薄膜, SiN孔), linker系列 (50-80nm 结晶COF, 铜网), k80系列 (50-80nm, 铜网)
 - **探针**: RTESPA-150 (R=8nm, k=7N/m), DDESP-V2 (R=100nm, k=89N/m)
 - **关键修正**: extend=approach/loading, retract=unloading/pull-off (2026-04-25 RealRaw 分支分离)
 - **核心发现**: JJS retract pull-off ~115.9 nN >> extend snap-in ~17.3 nN (~7.0x), 液桥-膜顺应性耦合放大
