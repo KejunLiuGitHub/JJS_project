@@ -11,11 +11,11 @@ AFM force-distance curve analysis for 2D COF (covalent organic framework) thin f
 
 ## Constitutional Rules (摘要 — 完整版见 .claude/constitution.md)
 
-1. **progress.md 是项目中心**: 每次运行必须追加新条目（14 章节完整格式），只增不改。
-2. **文献引用必须有本地文件 + 行号**: 所有引用必须指向 `literature/*.md` 的特定行号范围。没有本地文献文件的文章不得引用。引用前必须先 Read 对应文件。
+1. **progress.md 中心地位**: 每次运行追加 14 章节完整条目。**只增不改**——学生可以追加 `> **学生注**` 讨论段，但不能删除或修改自动生成的历史条目。结论有错时，在新条目中追加更正并显式引用原位置（协议 1.6）。所有 progress.md 修改通过 git diff 在 PR 中暴露。
+2. **文献引用必须有本地文件 + 行号**: 引用前必须先 Read `literature/*.md`，标注行号范围。没有本地文献文件 → 不得引用。
 3. **代码纪律**: scripts/ 中只有能跑通的代码。不能跑的移入 archive/。
-4. **Git 分支**: 学生不直接 push main。学生在 `student/<name>/<topic>` 分支工作，通过 PR 合并。
-5. **学生可改**: RealRaw/数据, dataset_registry.py, progress.md, literature/。**不可改**: 其他 scripts/、CLAUDE.md、constitution.md、README.md、.gitignore。
+4. **Git 分支**: 学生不直接 push main。在 `student/<name>/<topic>` 分支工作，通过 PR 由教师审查合并。
+5. **学生可改**: RealRaw/数据, dataset_registry.py, progress.md (追加模式), literature/（新文献）。**不可改**: 其他 scripts/、CLAUDE.md、constitution.md、README.md、.gitignore。
 
 ## Key Commands
 
