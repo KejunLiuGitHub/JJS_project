@@ -38,5 +38,6 @@ baseline_trace = np.median(defl_trace_raw[:10])  # ← 前 10 个点不是 far-f
 
 1. **永远用 NanoScope Analysis 导出的 txt 做权威数据源**，不要自己解析 binary。NanoScope 的导出已经做了基线校正、单位转换、branch 分离，这些都是 parser 容易出错的地方。
 2. **解析 binary 格式前，先用同一测量的 txt 导出做对照**。`comparison/` 文件夹里有同一文件的三版格式，这种对照应该在做 parser 的第一天就做。
-3. **Bruker binary 格式没有公开文档**，`*Ciao force image list` 的 bpp=2 vs bpp=4 变体、trace/retrace 存储顺序、ADC 转换系数都是靠猜的。
-4. **不要修这个 parser**。三个错误互相耦合（trace/retrace 顺序 + ADC 系数 + 基线减法），修好一个另外两个还在。直接放弃，用 txt 导出 + JJS pipeline（`compute_apparent_modulus.py`）。
+3. **Parser 能读出数据，但读出的值不能用于科学分析**。数据块定位、Z/Deflection 通道识别是能工作的——读出来的值数量级也合理（Z ~1000nm, F ~3000nN）。问题全在校准层面（trace/retrace 顺序、ADC 系数、基线减法），不是读不出数据。如果只是想"从 binary 里看到点什么"，parser 能做到；但别用于拟合模量或发论文。
+4. **要修这三个错基本等于逆向工程重写一遍**。Bruker binary 格式没有公开文档，`*Ciao force image list` 的 bpp=2 vs bpp=4 变体、trace/retrace 存储顺序、ADC 转换系数都是靠猜的。而 NanoScope Analysis 导出 txt 时已经做了所有这些校准（基线校正、单位转换、branch 分离），直接用 txt 就行。
+5. **不要修这个 parser**。三个错误互相耦合（trace/retrace 顺序 + ADC 系数 + 基线减法），修好一个另外两个还在。直接放弃，用 txt 导出 + JJS pipeline（`compute_apparent_modulus.py`）。
